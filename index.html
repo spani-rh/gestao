@@ -7,53 +7,44 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="manifest" href="manifest.json?v=4" />
-  <link rel="stylesheet" href="style.css?v=4" />
+  <link rel="manifest" href="manifest.json?v=5" />
+  <link rel="stylesheet" href="style.css?v=5" />
   <meta name="theme-color" content="#07111f" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen">
-    <div class="login-shade"></div>
-
-    <div class="login-brand">
-      <img src="assets/spani-logo-card.png" alt="Spani Atacadista" class="brand-logo" />
-      <h1>Gestão RH</h1>
-      <p>Controle de pessoas, escalas, banco de horas, faltas e avisos ao RH.</p>
-      <div class="brand-badges">
-        <span>Segurança</span>
-        <span>Confiabilidade</span>
-        <span>Atualização em tempo real</span>
-      </div>
+    <div class="login-canvas">
+      <form id="loginForm" class="login-form-overlay" autocomplete="off" novalidate>
+        <input id="usuario" name="sp_usuario_v5" class="field user-field" type="text" placeholder="" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+        <input id="senha" name="sp_senha_v5" class="field pass-field" type="password" placeholder="" maxlength="4" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+        <button id="togglePassword" class="hot-eye" type="button" aria-label="Mostrar ou ocultar senha"></button>
+        <label class="hot-remember" title="Lembrar meu acesso"><input id="rememberMe" type="checkbox" checked /></label>
+        <button id="forgotPasswordBtn" class="hot-forgot" type="button" title="Esqueceu sua senha?"></button>
+        <button class="hot-enter" type="submit" title="Entrar"></button>
+        <p id="loginMsg" class="login-msg"></p>
+      </form>
     </div>
 
-    <form id="loginForm" class="login-card" autocomplete="off" novalidate>
-      <h2>Acesse sua conta</h2>
-      <div class="login-underline"></div>
-
-      <label class="field-label" for="usuario">Usuário</label>
-      <div class="input-wrap">
-        <span class="field-icon">👤</span>
-        <input id="usuario" name="sp_usuario_v4" class="login-input" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+    <div class="mobile-login">
+      <div class="mobile-brand">
+        <div class="mobile-logo-text">SPANI<br><span>ATACADISTA</span></div>
+        <h1>Gestão RH</h1>
+        <p>Controle de pessoas, escalas e banco de horas.</p>
       </div>
-
-      <label class="field-label" for="senha">Senha</label>
-      <div class="input-wrap">
-        <span class="field-icon">🔒</span>
-        <input id="senha" name="sp_senha_v4" class="login-input" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
-        <button id="togglePassword" class="toggle-password" type="button" aria-label="Mostrar ou ocultar senha">👁</button>
-      </div>
-
-      <div class="login-row">
-        <label class="remember-box">
-          <input id="rememberMe" type="checkbox" checked />
-          <span>Lembrar meu usuário</span>
-        </label>
-        <button id="forgotPasswordBtn" class="forgot-link" type="button">Esqueceu sua senha?</button>
-      </div>
-
-      <button class="login-button" type="submit">Entrar</button>
-      <p id="loginMsg" class="login-msg"></p>
-    </form>
+      <form id="mobileLoginForm" class="mobile-card" autocomplete="off" novalidate>
+        <h2>Acesse sua conta</h2>
+        <label>Usuário</label>
+        <input id="usuarioMobile" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+        <label>Senha</label>
+        <input id="senhaMobile" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" />
+        <div class="mobile-row">
+          <label><input id="rememberMeMobile" type="checkbox" checked /> Lembrar</label>
+          <button id="forgotPasswordMobileBtn" type="button">Esqueceu?</button>
+        </div>
+        <button type="submit">Entrar</button>
+        <p id="loginMsgMobile" class="login-msg"></p>
+      </form>
+    </div>
   </section>
 
   <main id="appScreen" class="app-screen hidden">
@@ -138,6 +129,6 @@
   </section>
 
   <div id="toast" class="toast hidden"></div>
-  <script type="module" src="script.js?v=4"></script>
+  <script type="module" src="script.js?v=5"></script>
 </body>
 </html>

@@ -1,7 +1,6 @@
-const CACHE_NAME = "spani-rh-v4-assets";
+const CACHE_NAME = "spani-rh-v5-assets";
 const IMAGE_ASSETS = [
-  "./assets/login-bg-clean.jpg",
-  "./assets/spani-logo-card.png",
+  "./assets/login-desktop.png",
   "./assets/dashboard-admin.png",
   "./assets/dashboard-lider.png",
   "./assets/escalas.png",
@@ -17,9 +16,7 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.map((key) => key !== CACHE_NAME ? caches.delete(key) : null)))
-  );
+  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.map((key) => key !== CACHE_NAME ? caches.delete(key) : null))));
   self.clients.claim();
 });
 
@@ -30,7 +27,6 @@ self.addEventListener("message", (event) => {
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
-
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
@@ -44,10 +40,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.match(request, { ignoreSearch: true }).then((cached) => {
         const network = fetch(request).then((response) => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
+          if (response && response.status === 200) caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
           return response;
         }).catch(() => cached);
         return cached || network;
