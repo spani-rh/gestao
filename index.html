@@ -3,178 +3,99 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spani Atacadista - Gestão RH</title>
+  <title>Spani Atacadista · Gestão RH</title>
+  <meta name="theme-color" content="#07111f" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="manifest" href="manifest.json?v=7" />
-  <link rel="stylesheet" href="style.css?v=7" />
-  <meta name="theme-color" content="#06111f" />
+  <link rel="manifest" href="manifest.json?v=8" />
+  <link rel="stylesheet" href="style.css?v=8" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen">
     <div class="login-bg"></div>
-    <div class="login-overlay"></div>
-    <div class="login-layout">
-      <div class="brand-panel">
-        <img src="assets/logo-spani-transparente.png" alt="Spani Atacadista" class="brand-logo" />
-        <div class="brand-copy">
-          <h1>Gestão RH</h1>
-          <p>Controle de pessoas, escalas, banco de horas, faltas e avisos ao RH.</p>
-        </div>
-        <div class="stats-row">
-          <div class="stat-box orange">
-            <strong>4</strong>
-            <span>Administradores</span>
-          </div>
-          <div class="stat-box green">
-            <strong>7</strong>
-            <span>Líderes</span>
-          </div>
-        </div>
-        <div class="trust-row">
-          <span>Segurança</span>
-          <span>Confiabilidade</span>
-          <span>Atualização em tempo real</span>
-        </div>
-      </div>
-
-      <div class="login-card-wrap">
-        <form id="loginForm" class="login-card" autocomplete="off" novalidate>
-          <h2>Acesse sua conta</h2>
-          <div class="login-underline"></div>
-
-          <label for="usuario">Usuário</label>
-          <div class="input-wrap">
-            <span class="input-icon">👤</span>
-            <input id="usuario" name="sp_usuario_v6" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
-          </div>
-
-          <label for="senha">Senha</label>
-          <div class="input-wrap">
-            <span class="input-icon">🔒</span>
-            <input id="senha" name="sp_senha_v6" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
-            <button id="togglePassword" class="eye-btn" type="button" aria-label="Mostrar ou ocultar senha">👁️</button>
-          </div>
-
-          <div class="login-actions-row">
-            <label class="remember-wrap"><input id="rememberMe" type="checkbox" checked /> <span>Lembrar meu acesso</span></label>
-            <button id="forgotPasswordBtn" class="link-btn" type="button">Esqueceu sua senha?</button>
-          </div>
-
-          <button class="submit-btn" type="submit">Entrar</button>
-          <p id="loginMsg" class="login-msg"></p>
-        </form>
-      </div>
-    </div>
-
-    <div class="mobile-login">
-      <div class="mobile-panel">
-        <img src="assets/logo-spani-transparente.png" alt="Spani Atacadista" class="mobile-logo" />
+    <div class="login-shell">
+      <div class="login-brand">
+        <img src="assets/logo.svg" alt="Spani Atacadista" />
         <h1>Gestão RH</h1>
-        <p>Controle de pessoas, escalas, banco de horas, faltas e avisos ao RH.</p>
-        <form id="mobileLoginForm" class="mobile-card" autocomplete="off" novalidate>
-          <h2>Acesse sua conta</h2>
-          <label for="usuarioMobile">Usuário</label>
-          <input id="usuarioMobile" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
-          <label for="senhaMobile">Senha</label>
-          <div class="mobile-pass-wrap">
-            <input id="senhaMobile" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" />
-            <button id="togglePasswordMobile" type="button">👁️</button>
-          </div>
-          <div class="mobile-row">
-            <label><input id="rememberMeMobile" type="checkbox" checked /> Lembrar</label>
-            <button id="forgotPasswordMobileBtn" type="button">Esqueceu?</button>
-          </div>
-          <button type="submit">Entrar</button>
-          <p id="loginMsgMobile" class="login-msg"></p>
-        </form>
+        <p>Sistema interno para escalas, banco de horas, férias, planos de ação e avisos ao RH.</p>
+        <div class="mini-metrics">
+          <div><strong>4</strong><span>Administradores</span></div>
+          <div><strong>7</strong><span>Líderes</span></div>
+        </div>
       </div>
+
+      <form id="loginForm" class="login-card" autocomplete="off" novalidate>
+        <h2>Acesse sua conta</h2>
+        <p>Informe usuário e senha para continuar.</p>
+
+        <label for="usuario">Usuário</label>
+        <div class="field">
+          <span>👤</span>
+          <input id="usuario" name="usuario_v8" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+        </div>
+
+        <label for="senha">Senha</label>
+        <div class="field">
+          <span>🔒</span>
+          <input id="senha" name="senha_v8" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required />
+          <button id="togglePassword" type="button" class="icon-btn" aria-label="Mostrar ou ocultar senha">👁️</button>
+        </div>
+
+        <div class="login-row">
+          <label class="remember"><input id="rememberMe" type="checkbox" checked /> Lembrar meu usuário</label>
+          <button id="forgotPasswordBtn" type="button" class="link-button">Esqueceu sua senha?</button>
+        </div>
+
+        <button class="primary-button" type="submit">Entrar</button>
+        <p id="loginMsg" class="form-message"></p>
+      </form>
     </div>
   </section>
 
-  <main id="appScreen" class="app-screen hidden">
-    <div id="mockupStage" class="mockup-stage">
-      <div class="top-user-pill">
-        <strong id="userName">Usuário</strong>
-        <span id="userRole">Perfil</span>
+  <main id="appScreen" class="app hidden">
+    <aside class="sidebar">
+      <div class="logo-block">
+        <img src="assets/logo.svg" alt="Spani Atacadista" />
+        <span>Gestão RH</span>
       </div>
+      <nav id="sideNav"></nav>
+      <button id="logoutBtn" class="logout-button">Sair</button>
+    </aside>
 
-      <button class="hot nav dashboard" data-page="dashboard" title="Início"></button>
-      <button class="hot nav colaboradores" data-page="colaboradores" title="Colaboradores"></button>
-      <button class="hot nav escalas" data-page="escalas" title="Escalas"></button>
-      <button class="hot nav banco" data-page="banco" title="Banco de Horas"></button>
-      <button class="hot nav planos" data-page="planos" title="Planos de Ação"></button>
-      <button class="hot nav avisos" data-page="avisos" title="Avisos RH"></button>
-      <button class="hot nav eventos" data-page="eventos" title="Eventos e Férias"></button>
-      <button class="hot nav sair" id="logoutBtn" title="Sair"></button>
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <h1 id="pageTitle">Início</h1>
+          <p id="pageSubtitle">Resumo do sistema</p>
+        </div>
+        <div class="top-actions">
+          <button id="refreshBtn" class="ghost-button">Atualizar</button>
+          <button id="quickAvisoBtn" class="primary-small">Avisar RH</button>
+          <div class="user-pill">
+            <span id="userInitials">RH</span>
+            <div>
+              <strong id="userName">Usuário</strong>
+              <small id="userRole">Perfil</small>
+            </div>
+          </div>
+        </div>
+      </header>
 
-      <button id="sendAvisoBtn" class="floating-action">Enviar aviso ao RH</button>
-      <button id="newScheduleBtn" class="floating-action secondary">Nova escala</button>
-    </div>
+      <section id="content" class="content"></section>
+    </section>
   </main>
 
-  <section id="passwordModal" class="modal hidden">
+  <section id="modal" class="modal hidden">
     <div class="modal-card">
-      <h2>Troque sua senha</h2>
-      <p>Por segurança, escolha uma nova senha de 4 dígitos para continuar usando o sistema.</p>
-      <form id="passwordForm">
-        <input id="novaSenha" type="password" maxlength="4" minlength="4" inputmode="numeric" placeholder="Nova senha de 4 dígitos" required />
-        <input id="confirmaSenha" type="password" maxlength="4" minlength="4" inputmode="numeric" placeholder="Confirmar senha" required />
-        <button type="submit">Salvar nova senha</button>
-      </form>
-      <small>A senha será salva no cadastro do usuário no Firestore.</small>
-    </div>
-  </section>
-
-  <section id="forgotModal" class="modal hidden">
-    <div class="modal-card aviso-card">
-      <button class="close" id="closeForgot" type="button">×</button>
-      <h2>Recuperar acesso</h2>
-      <p>Se você esqueceu sua senha, procure a Jessica/RH ou um administrador para redefinir o acesso.</p>
-      <button id="forgotOk" type="button" class="secondary-modal-btn">Entendi</button>
-    </div>
-  </section>
-
-  <section id="avisoModal" class="modal hidden">
-    <div class="modal-card aviso-card">
-      <button class="close" id="closeAviso" type="button">×</button>
-      <h2>Enviar aviso para o RH</h2>
-      <p>Destinatário: <strong>Jessica - RH</strong></p>
-      <form id="avisoForm">
-        <label>Tipo do aviso</label>
-        <select id="avisoTipo" required>
-          <option value="atestado">Atestado</option>
-          <option value="banco_horas">Banco de Horas</option>
-          <option value="faltas">Faltas</option>
-        </select>
-        <label>Colaborador</label>
-        <input id="avisoColaborador" type="text" placeholder="Nome do colaborador" required />
-        <label>Mensagem</label>
-        <textarea id="avisoMensagem" rows="4" placeholder="Descreva o que aconteceu..." required></textarea>
-        <button type="submit">Enviar para Jessica</button>
-      </form>
-    </div>
-  </section>
-
-  <section id="scheduleModal" class="modal hidden">
-    <div class="modal-card aviso-card">
-      <button class="close" id="closeSchedule" type="button">×</button>
-      <h2>Criar nova escala</h2>
-      <p id="scheduleInfo">A escala será criada conforme a permissão do usuário.</p>
-      <form id="scheduleForm">
-        <label>Período inicial</label>
-        <input id="escalaInicio" type="date" required />
-        <label>Período final</label>
-        <input id="escalaFim" type="date" required />
-        <label>Observação</label>
-        <textarea id="escalaObs" rows="3" placeholder="Observações da escala"></textarea>
-        <button type="submit">Salvar escala</button>
-      </form>
+      <button id="closeModal" class="modal-close" type="button">×</button>
+      <h2 id="modalTitle"></h2>
+      <div id="modalBody"></div>
     </div>
   </section>
 
   <div id="toast" class="toast hidden"></div>
-  <script type="module" src="script.js?v=7"></script>
+
+  <script type="module" src="script.js?v=8"></script>
 </body>
 </html>

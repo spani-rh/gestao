@@ -1,35 +1,30 @@
 Spani Atacadista - Gestão RH
 
-Versão v5:
-- Tela de login fiel à imagem aprovada.
-- Removida poluição visual: fica apenas logo + Gestão RH + frase curta.
-- PC usa a imagem aprovada como base e os campos reais ficam alinhados sobre ela.
-- Celular usa versão própria para não cortar informações.
-- Correção de cache com versão ?v=5 e service worker novo.
+VERSÃO REAL / USÁVEL - v8
 
-Login inicial:
-- anizia / 4827
-- jadson / 7394
-- jose_mathias / 9158
-- jessica / 2649
-- andre / 6382
-- jacqueline / 5073
-- heidi / 8461
-- patricia / 1937
-- josival / 7526
-- jose_arimateia / 4195
+Esta versão NÃO usa as telas de apresentação como imagem de fundo.
+O sistema foi refeito em HTML, CSS e JavaScript reais.
 
+O que usa do Firebase:
+- usuarios: login, perfil, setor, acessoTotal, podeCriarEscala, senhaAlterada
+- setores: lista de setores
+- colaboradores: cadastro e consulta
+- escalas: criação e consulta de escalas
+- avisosRH: envio de aviso para Jessica/RH (Atestado, Banco de Horas, Faltas)
+- bancoHoras: saldos por colaborador
+- planosAcao: planos para reduzir/pagar horas
+- eventos: eventos do mês
+- ferias: férias programadas
+- faltas/atestados: leitura futura caso você queira manter separado
 
-Versão v6:
-- Login refeito em HTML real, sem campos flutuando.
-- Checkbox Lembrar meu acesso funcional.
-- Botão Esqueceu sua senha funcional.
-- Cache atualizado para ?v=6.
+Importante:
+- Não há números falsos.
+- Se o Firebase estiver vazio, a tela mostra zero ou “nenhum registro”.
+- Líder vê apenas o próprio setor.
+- Administrador vê tudo.
+- Primeiro acesso solicita troca de senha quando senhaAlterada não estiver true.
+- Não usa Storage/PDF.
 
-
-Versão v7:
-- Mantida a correção dos campos, checkbox e botões da v6.
-- Corrigida a duplicação/espelhamento das informações na tela inicial.
-- Fundo da tela inicial agora é limpo, sem textos antigos por trás.
-- Logo passou a usar transparência.
-- Cache atualizado para ?v=7.
+Para subir:
+1. Enviar todos os arquivos para o GitHub.
+2. Abrir: https://spani-rh.github.io/gestao/?v=8
