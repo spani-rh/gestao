@@ -1,11 +1,13 @@
-const CACHE_NAME = "spani-rh-real-v9";
+const CACHE_NAME = "spani-rh-real-v10";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=9",
-  "./script.js?v=9",
-  "./manifest.json?v=9",
-  "./assets/logo.svg"
+  "./style.css?v=10",
+  "./script.js?v=10",
+  "./manifest.json?v=10",
+  "./assets/logo.svg",
+  "./assets/logo-spani-real.png",
+  "./assets/login-polished-reference.png"
 ];
 
 self.addEventListener("install", event => {

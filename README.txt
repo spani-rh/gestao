@@ -37,3 +37,11 @@ VERSÃO v9:
 - Visual melhorado para aproximar do protótipo apresentado.
 - Logo centralizado no menu e login mais profissional.
 - Cache atualizado para ?v=9.
+
+
+VERSÃO v10:
+- Login voltou ao visual aprovado, mantendo campos reais alinhados dentro das caixas.
+- Mantida a base funcional real da v8/v9 no sistema interno.
+- Logo do Spani trocado pelo recorte real do mockup aprovado.
+- Botões Entrar, Lembrar meu usuário e Esqueceu sua senha mantidos funcionando.
+- Cache atualizado para ?v=10.

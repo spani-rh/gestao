@@ -8,47 +8,28 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="manifest" href="manifest.json?v=9" />
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="manifest" href="manifest.json?v=10" />
+  <link rel="stylesheet" href="style.css?v=10" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen">
-    <div class="login-bg"></div>
-    <div class="login-shell">
-      <div class="login-brand">
-        <img src="assets/logo.svg" alt="Spani Atacadista" />
-        <h1>Gestão RH</h1>
-        <p>Sistema interno para escalas, banco de horas, férias, planos de ação e avisos ao RH.</p>
-        <div class="mini-metrics">
-          <div><strong>4</strong><span>Administradores</span></div>
-          <div><strong>7</strong><span>Líderes</span></div>
-        </div>
-      </div>
-
-      <form id="loginForm" class="login-card" autocomplete="off" novalidate>
-        <h2>Acesse sua conta</h2>
-        <p>Informe usuário e senha para continuar.</p>
-
-        <label for="usuario">Usuário</label>
-        <div class="field">
-          <span>👤</span>
-          <input id="usuario" name="usuario_v8" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+    <div class="login-canvas">
+      <form id="loginForm" class="login-form" autocomplete="off" novalidate>
+        <div class="input-shell user-input-shell">
+          <span class="input-icon">👤</span>
+          <input id="usuario" name="usuario_v10" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
         </div>
 
-        <label for="senha">Senha</label>
-        <div class="field">
-          <span>🔒</span>
-          <input id="senha" name="senha_v8" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required />
-          <button id="togglePassword" type="button" class="icon-btn" aria-label="Mostrar ou ocultar senha">👁️</button>
+        <div class="input-shell pass-input-shell">
+          <span class="input-icon">🔒</span>
+          <input id="senha" name="senha_v10" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required />
+          <button id="togglePassword" type="button" class="eye-btn" aria-label="Mostrar ou ocultar senha">👁️</button>
         </div>
 
-        <div class="login-row">
-          <label class="remember"><input id="rememberMe" type="checkbox" checked /> Lembrar meu usuário</label>
-          <button id="forgotPasswordBtn" type="button" class="link-button">Esqueceu sua senha?</button>
-        </div>
-
-        <button class="primary-button" type="submit">Entrar</button>
-        <p id="loginMsg" class="form-message"></p>
+        <label class="remember-hotspot"><input id="rememberMe" type="checkbox" checked /> <span></span></label>
+        <button id="forgotPasswordBtn" type="button" class="forgot-hotspot" aria-label="Esqueceu sua senha?"></button>
+        <button class="enter-hotspot" type="submit" aria-label="Entrar"></button>
+        <p id="loginMsg" class="login-msg"></p>
       </form>
     </div>
   </section>
@@ -56,7 +37,7 @@
   <main id="appScreen" class="app hidden">
     <aside class="sidebar">
       <div class="logo-block">
-        <img src="assets/logo.svg" alt="Spani Atacadista" />
+        <img src="assets/logo-spani-real.png" alt="Spani Atacadista" />
         <span>Gestão RH</span>
       </div>
       <nav id="sideNav"></nav>
@@ -96,6 +77,6 @@
 
   <div id="toast" class="toast hidden"></div>
 
-  <script type="module" src="script.js?v=9"></script>
+  <script type="module" src="script.js?v=10"></script>
 </body>
 </html>
