@@ -6,7 +6,8 @@ const ASSETS = [
   "./script.js?v=11",
   "./manifest.json?v=11",
   "./assets/logo.svg",
-  "./assets/logo-spani-real.png"
+  "./assets/logo-spani-real.png",
+  "./assets/login-polished-reference.png"
 ];
 
 self.addEventListener("install", event => {

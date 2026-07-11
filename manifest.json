@@ -3,8 +3,8 @@
   "short_name": "Gestão RH",
   "start_url": "./?v=11",
   "display": "standalone",
-  "background_color": "#0a0b0f",
-  "theme_color": "#0a0b0f",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
   "icons": [
     {
       "src": "assets/logo-spani-real.png",

@@ -4,63 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spani Atacadista · Gestão RH</title>
-  <meta name="theme-color" content="#0a0b0f" />
+  <meta name="theme-color" content="#07111f" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="icon" href="assets/logo-spani-real.png" />
   <link rel="manifest" href="manifest.json?v=11" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=11" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen">
-    <div class="login-side">
-      <div class="login-side-glow"></div>
-      <div class="login-side-content">
-        <img src="assets/logo-spani-real.png" alt="Spani Atacadista" class="login-side-logo" />
-        <h1>Gestão de Pessoas</h1>
-        <p>Escalas, colaboradores, banco de horas, férias e avisos ao RH — tudo em um só lugar, atualizado direto do sistema.</p>
-        <ul class="login-side-list">
-          <li><span></span>Dados reais, sem números fictícios</li>
-          <li><span></span>Acesso por setor para líderes</li>
-          <li><span></span>Visão total para administradores</li>
-        </ul>
-      </div>
-      <div class="login-side-foot">Spani Atacadista &middot; Plataforma interna</div>
-    </div>
-
-    <div class="login-main">
+    <div class="login-canvas">
       <form id="loginForm" class="login-form" autocomplete="off" novalidate>
-        <div class="login-form-head">
-          <img src="assets/logo-spani-real.png" alt="Spani Atacadista" class="login-form-logo" />
-          <h2>Acesse sua conta</h2>
-          <p>Entre com seu usuário e senha para continuar.</p>
-        </div>
-
-        <label class="field-label" for="usuario">Usuário</label>
         <div class="input-shell user-input-shell">
-          <svg class="input-icon" viewBox="0 0 24 24" fill="none"><path d="M12 12c2.62 0 4.75-2.13 4.75-4.75S14.62 2.5 12 2.5 7.25 4.63 7.25 7.25 9.38 12 12 12Zm0 2.25c-3.17 0-9.5 1.59-9.5 4.75V21h19v-2c0-3.16-6.33-4.75-9.5-4.75Z" fill="currentColor"/></svg>
+          <span class="input-icon">👤</span>
           <input id="usuario" name="usuario_v10" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
         </div>
 
-        <label class="field-label" for="senha">Senha</label>
         <div class="input-shell pass-input-shell">
-          <svg class="input-icon" viewBox="0 0 24 24" fill="none"><path d="M6 10V8a6 6 0 1 1 12 0v2h.75A1.25 1.25 0 0 1 20 11.25v9A1.25 1.25 0 0 1 18.75 21.5H5.25A1.25 1.25 0 0 1 4 20.25v-9A1.25 1.25 0 0 1 5.25 10H6Zm2 0h8V8a4 4 0 1 0-8 0v2Zm4 4.25a1.5 1.5 0 0 1 .75 2.8V19a.75.75 0 0 1-1.5 0v-1.95a1.5 1.5 0 0 1 .75-2.8Z" fill="currentColor"/></svg>
+          <span class="input-icon">🔒</span>
           <input id="senha" name="senha_v10" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required />
-          <button id="togglePassword" type="button" class="eye-btn" aria-label="Mostrar ou ocultar senha">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 5c-5.5 0-9.5 4.5-10.5 7 1 2.5 5 7 10.5 7s9.5-4.5 10.5-7C21.5 9.5 17.5 5 12 5Zm0 11.5A4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 0 1 0 9Zm0-2A2.5 2.5 0 1 0 12 9.5a2.5 2.5 0 0 0 0 5Z" fill="currentColor"/></svg>
-          </button>
+          <button id="togglePassword" type="button" class="eye-btn" aria-label="Mostrar ou ocultar senha">👁️</button>
         </div>
 
-        <div class="login-form-row">
-          <label class="remember-hotspot"><input id="rememberMe" type="checkbox" checked /> <span>Lembrar meu usuário</span></label>
-          <button id="forgotPasswordBtn" type="button" class="forgot-hotspot">Esqueceu sua senha?</button>
-        </div>
-
-        <button class="enter-hotspot" type="submit">Entrar</button>
+        <label class="remember-hotspot"><input id="rememberMe" type="checkbox" checked /> <span></span></label>
+        <button id="forgotPasswordBtn" type="button" class="forgot-hotspot" aria-label="Esqueceu sua senha?"></button>
+        <button class="enter-hotspot" type="submit" aria-label="Entrar"></button>
         <p id="loginMsg" class="login-msg"></p>
       </form>
     </div>

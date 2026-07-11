@@ -47,15 +47,9 @@ VERSÃO v10:
 - Cache atualizado para ?v=10.
 
 
-VERSÃO v11 (redesign visual):
-- Login refeito do zero em HTML/CSS real (sem imagem de fundo com "zonas invisíveis" de clique).
-  Antes: os campos e botões ficavam sobrepostos a uma imagem estática via posicionamento em %,
-  o que quebra fácil em qualquer variação de tela/fonte. Agora é um layout de verdade,
-  responsivo e sólido em qualquer dispositivo.
-- Paleta alinhada à marca Spani (vermelho/dourado) em vez do azul genérico da versão anterior.
-- Tipografia nova (Sora + Inter) via Google Fonts.
-- Cards, tabelas, badges, modais e sidebar redesenhados com mais contraste, sombras e acabamento.
-- TODA a lógica funcional (Firebase, autenticação, CRUD de cada seção, cache do PWA) foi mantida
-  exatamente igual — só o visual mudou. Nenhum id/classe usado pelo script.js foi alterado.
-- Cache atualizado para ?v=11 (index.html, style.css, script.js, manifest.json, service-worker.js).
-- Removida a imagem assets/login-polished-reference.png (não é mais usada).
+VERSÃO v11:
+- Alterado apenas o texto abaixo do logo na tela inicial.
+- Removido: “Spani Atacadista”, “Aplicativo RH” e “Gestão de Pessoas”.
+- Mantido apenas: “Gestão RH”.
+- Mantido o design da primeira página, campos e botões da v10.
+- Cache atualizado para ?v=11.
