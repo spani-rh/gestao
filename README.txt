@@ -25,3 +25,11 @@ Versão v6:
 - Checkbox Lembrar meu acesso funcional.
 - Botão Esqueceu sua senha funcional.
 - Cache atualizado para ?v=6.
+
+
+Versão v7:
+- Mantida a correção dos campos, checkbox e botões da v6.
+- Corrigida a duplicação/espelhamento das informações na tela inicial.
+- Fundo da tela inicial agora é limpo, sem textos antigos por trás.
+- Logo passou a usar transparência.
+- Cache atualizado para ?v=7.

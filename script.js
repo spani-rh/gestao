@@ -10,7 +10,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "6.0.0";
+const APP_VERSION = "7.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -288,7 +288,7 @@ async function clearOldAppCaches() {
   if (!("caches" in window)) return;
   try {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((key) => !key.includes("spani-rh-v5")).map((key) => caches.delete(key)));
+    await Promise.all(keys.filter((key) => !key.includes("spani-rh-v7")).map((key) => caches.delete(key)));
   } catch (error) {
     console.warn("Não foi possível limpar caches antigos:", error);
   }
