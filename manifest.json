@@ -1,13 +1,16 @@
 {
-  "name":"Spani Atacadista - Aplicativo RH",
-  "short_name":"Spani RH",
-  "start_url":"./index.html",
-  "display":"standalone",
-  "background_color":"#07111f",
-  "theme_color":"#07111f",
-  "description":"PWA de Gestão de Pessoas para Spani Atacadista.",
-  "icons":[
-    {"src":"assets/icon-192.png","sizes":"192x192","type":"image/png"},
-    {"src":"assets/icon-512.png","sizes":"512x512","type":"image/png"}
+  "name": "Spani Atacadista - Aplicativo RH",
+  "short_name": "Spani RH",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "icons": [
+    {
+      "src": "assets/login-mockup.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }
