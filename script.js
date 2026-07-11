@@ -10,7 +10,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "5.0.0";
+const APP_VERSION = "6.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -148,6 +148,10 @@ $("#mobileLoginForm").addEventListener("submit", async (e) => {
 
 $("#togglePassword").addEventListener("click", () => {
   const input = $("#senha");
+  input.type = input.type === "password" ? "text" : "password";
+});
+$("#togglePasswordMobile").addEventListener("click", () => {
+  const input = $("#senhaMobile");
   input.type = input.type === "password" ? "text" : "password";
 });
 
@@ -313,3 +317,4 @@ async function registerServiceWorker() {
 loadRememberedUser();
 clearOldAppCaches();
 registerServiceWorker();
+

@@ -18,3 +18,10 @@ Login inicial:
 - patricia / 1937
 - josival / 7526
 - jose_arimateia / 4195
+
+
+Versão v6:
+- Login refeito em HTML real, sem campos flutuando.
+- Checkbox Lembrar meu acesso funcional.
+- Botão Esqueceu sua senha funcional.
+- Cache atualizado para ?v=6.
