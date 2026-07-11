@@ -45,3 +45,11 @@ VERSÃO v10:
 - Logo do Spani trocado pelo recorte real do mockup aprovado.
 - Botões Entrar, Lembrar meu usuário e Esqueceu sua senha mantidos funcionando.
 - Cache atualizado para ?v=10.
+
+
+VERSÃO v11:
+- Alterado apenas o texto abaixo do logo na tela inicial.
+- Removido: “Spani Atacadista”, “Aplicativo RH” e “Gestão de Pessoas”.
+- Mantido apenas: “Gestão RH”.
+- Mantido o design da primeira página, campos e botões da v10.
+- Cache atualizado para ?v=11.
