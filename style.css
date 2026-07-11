@@ -17,67 +17,81 @@ button, input, select, textarea { font: inherit; }
 
 .login-hot-form {
   position: absolute;
-  right: clamp(5%, 8vw, 10%);
-  top: 27%;
-  width: min(520px, 36vw);
-  min-width: 360px;
-  height: 440px;
+  right: clamp(4%, 6vw, 7%);
+  top: 17%;
+  width: min(560px, 34vw);
+  min-width: 420px;
+  height: 580px;
 }
 
 .login-input {
   position: absolute;
   left: 8%;
   width: 84%;
-  height: 62px;
-  border: 1px solid rgba(155, 174, 203, .38);
-  background: rgba(3, 12, 24, .55);
+  height: 58px;
+  border: none;
+  background: transparent;
   color: #eef6ff;
   border-radius: 14px;
   padding: 0 20px 0 54px;
   outline: none;
-  font-size: 16px;
-  backdrop-filter: blur(6px);
+  font-size: 20px;
+  letter-spacing: 0.2px;
+  box-shadow: none;
+  text-shadow: 0 1px 8px rgba(0,0,0,.45);
 }
 
-.login-input::placeholder { color: #8e9bb0; }
-.login-input:focus { border-color: #ff7a00; box-shadow: 0 0 0 3px rgba(255, 122, 0, .16); }
-.login-input.user { top: 124px; }
-.login-input.pass { top: 246px; }
+.login-input::placeholder { color: transparent; }
+.login-input:focus {
+  background: rgba(9, 19, 34, .12);
+  box-shadow: inset 0 0 0 2px rgba(40, 133, 255, .18);
+}
+.login-input.user { top: 173px; }
+.login-input.pass { top: 294px; }
 
 .remember-box {
   position: absolute;
-  left: 7.5%;
-  top: 346px;
+  left: 8%;
+  top: 399px;
+  width: 48%;
+  height: 30px;
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #d8e5f7;
-  font-size: 15px;
+  color: transparent;
+  font-size: 0;
 }
-.remember-box input { width: 22px; height: 22px; accent-color: #2485ff; }
+.remember-box span { display: none; }
+.remember-box input {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
 
 .login-button {
   position: absolute;
   left: 8%;
-  top: 400px;
+  top: 452px;
   width: 84%;
-  height: 70px;
+  height: 74px;
   border: none;
-  border-radius: 14px;
-  color: white;
-  font-weight: 800;
-  font-size: 24px;
-  background: linear-gradient(180deg, #ff8c12, #ff6400);
+  border-radius: 18px;
+  color: transparent;
+  font-size: 0;
+  background: transparent;
   cursor: pointer;
-  box-shadow: 0 18px 40px rgba(255, 105, 0, .25);
+  box-shadow: none;
 }
-.login-button:hover { filter: brightness(1.08); }
+.login-button:hover { background: rgba(255,140,18,.06); }
 .login-msg {
   position: absolute;
   left: 8%;
-  top: 477px;
+  top: 536px;
   color: #ffb3a9;
   font-weight: 700;
+  text-shadow: 0 1px 10px rgba(0,0,0,.45);
 }
 
 .app-screen { min-height: 100vh; background: #06101c; overflow: hidden; }
@@ -219,21 +233,24 @@ button, input, select, textarea { font: inherit; }
     right: 5%;
     left: 5%;
     top: auto;
-    bottom: 44px;
+    bottom: 34px;
     width: auto;
     min-width: 0;
-    height: 360px;
+    height: 330px;
     background: rgba(4, 14, 27, .78);
     border: 1px solid rgba(150, 169, 196, .28);
     border-radius: 24px;
     padding: 20px;
     backdrop-filter: blur(10px);
   }
-  .login-input { left: 8%; height: 54px; }
+  .login-input { left: 8%; width: 84%; height: 54px; background: rgba(6,16,30,.78); border: 1px solid rgba(155,174,203,.24); }
+  .login-input::placeholder { color: #8e9bb0; }
   .login-input.user { top: 64px; }
   .login-input.pass { top: 140px; }
-  .remember-box { top: 214px; font-size: 13px; }
-  .login-button { top: 255px; height: 58px; font-size: 20px; }
+  .remember-box { top: 214px; width: auto; height: auto; font-size: 13px; color: #d8e5f7; }
+  .remember-box span { display: inline; }
+  .remember-box input { width: 22px; height: 22px; opacity: 1; accent-color: #2485ff; }
+  .login-button { top: 255px; height: 58px; font-size: 20px; color: white; background: linear-gradient(180deg, #ff8c12, #ff6400); }
   .login-msg { top: 316px; }
 
   .mockup-stage {

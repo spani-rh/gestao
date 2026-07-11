@@ -39,3 +39,5 @@ Alteração desta versão:
 - Troca visual de "Dashboard" para "Início" no menu.
 - Título administrativo ajustado para "Resumo Geral".
 - Para líderes, a tela principal fica como "Minha Área"/resumo do setor na experiência do sistema.
+
+- Correção da tela de login: campos e botão ficaram invisíveis sobre a arte, evitando duplicação visual.
