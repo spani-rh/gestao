@@ -1,55 +1,16 @@
 Spani Atacadista - Gestão RH
+Versão v12 - estilo Betesda
 
-VERSÃO REAL / USÁVEL - v8
+Esta versão abandona o visual anterior e usa um layout limpo no estilo Betesda:
+- menu lateral simples
+- cards limpos
+- botões reais
+- tabelas reais
+- formulários reais
+- integração Firebase preservada
 
-Esta versão NÃO usa as telas de apresentação como imagem de fundo.
-O sistema foi refeito em HTML, CSS e JavaScript reais.
+Coleções usadas:
+usuarios, setores, colaboradores, escalas, avisosRH, bancoHoras, planosAcao, eventos, ferias, faltas, atestados.
 
-O que usa do Firebase:
-- usuarios: login, perfil, setor, acessoTotal, podeCriarEscala, senhaAlterada
-- setores: lista de setores
-- colaboradores: cadastro e consulta
-- escalas: criação e consulta de escalas
-- avisosRH: envio de aviso para Jessica/RH (Atestado, Banco de Horas, Faltas)
-- bancoHoras: saldos por colaborador
-- planosAcao: planos para reduzir/pagar horas
-- eventos: eventos do mês
-- ferias: férias programadas
-- faltas/atestados: leitura futura caso você queira manter separado
-
-Importante:
-- Não há números falsos.
-- Se o Firebase estiver vazio, a tela mostra zero ou “nenhum registro”.
-- Líder vê apenas o próprio setor.
-- Administrador vê tudo.
-- Primeiro acesso solicita troca de senha quando senhaAlterada não estiver true.
-- Não usa Storage/PDF.
-
-Para subir:
-1. Enviar todos os arquivos para o GitHub.
-2. Abrir: https://spani-rh.github.io/gestao/?v=8
-
-
-VERSÃO v9:
-- Mantida a lógica funcional da v8.
-- Sem telas de apresentação em imagem.
-- Sem botões flutuando.
-- Visual melhorado para aproximar do protótipo apresentado.
-- Logo centralizado no menu e login mais profissional.
-- Cache atualizado para ?v=9.
-
-
-VERSÃO v10:
-- Login voltou ao visual aprovado, mantendo campos reais alinhados dentro das caixas.
-- Mantida a base funcional real da v8/v9 no sistema interno.
-- Logo do Spani trocado pelo recorte real do mockup aprovado.
-- Botões Entrar, Lembrar meu usuário e Esqueceu sua senha mantidos funcionando.
-- Cache atualizado para ?v=10.
-
-
-VERSÃO v11:
-- Alterado apenas o texto abaixo do logo na tela inicial.
-- Removido: “Spani Atacadista”, “Aplicativo RH” e “Gestão de Pessoas”.
-- Mantido apenas: “Gestão RH”.
-- Mantido o design da primeira página, campos e botões da v10.
-- Cache atualizado para ?v=11.
+Abrir no GitHub Pages:
+https://spani-rh.github.io/gestao/?v=12

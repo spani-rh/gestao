@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "11.0.0";
+const APP_VERSION = "12.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -495,7 +495,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-real-v11")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-betesda-v12")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;
@@ -507,3 +507,16 @@ async function registerSW(){
 rememberLoad();
 clearOldCaches();
 registerSW();
+
+const menuBtn = document.querySelector("#menuBtn");
+if (menuBtn) {
+  menuBtn.addEventListener("click", () => document.body.classList.toggle("menu-open"));
+}
+document.addEventListener("click", (event) => {
+  if (window.innerWidth <= 850 && document.body.classList.contains("menu-open")) {
+    const insideSidebar = event.target.closest(".sidebar");
+    const clickedMenu = event.target.closest("#menuBtn");
+    const clickedNav = event.target.closest(".nav-button");
+    if ((!insideSidebar && !clickedMenu) || clickedNav) document.body.classList.remove("menu-open");
+  }
+});

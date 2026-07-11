@@ -1,15 +1,15 @@
 {
   "name": "Spani Atacadista - Gestão RH",
   "short_name": "Gestão RH",
-  "start_url": "./?v=11",
+  "start_url": "./?v=12",
   "display": "standalone",
-  "background_color": "#07111f",
-  "theme_color": "#07111f",
+  "background_color": "#f3f5f8",
+  "theme_color": "#101827",
   "icons": [
     {
-      "src": "assets/logo-spani-real.png",
-      "sizes": "280x122",
-      "type": "image/png",
+      "src": "assets/logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
       "purpose": "any"
     }
   ]
