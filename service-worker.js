@@ -1,10 +1,10 @@
-const CACHE_NAME = "spani-rh-real-v8";
+const CACHE_NAME = "spani-rh-real-v9";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=8",
-  "./script.js?v=8",
-  "./manifest.json?v=8",
+  "./style.css?v=9",
+  "./script.js?v=9",
+  "./manifest.json?v=9",
   "./assets/logo.svg"
 ];
 

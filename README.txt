@@ -28,3 +28,12 @@ Importante:
 Para subir:
 1. Enviar todos os arquivos para o GitHub.
 2. Abrir: https://spani-rh.github.io/gestao/?v=8
+
+
+VERSÃO v9:
+- Mantida a lógica funcional da v8.
+- Sem telas de apresentação em imagem.
+- Sem botões flutuando.
+- Visual melhorado para aproximar do protótipo apresentado.
+- Logo centralizado no menu e login mais profissional.
+- Cache atualizado para ?v=9.
