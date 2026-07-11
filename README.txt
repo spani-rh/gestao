@@ -49,3 +49,13 @@ Correções v3:
 - Botão "Esqueceu sua senha?" funcional com orientação ao RH/Jessica.
 - Cache do PWA corrigido para buscar atualizações do servidor sem depender de limpar histórico/cookies.
 - Service Worker atualizado para evitar abrir versões antigas do site.
+
+
+Correções v4:
+- Tela de login refeita de verdade, sem usar imagem de fundo com campos/botões desenhados.
+- Login limpo: apenas logo + “Gestão RH”.
+- Removidos textos repetitivos “Spani Atacadista / Aplicativo RH / Gestão de Pessoas”.
+- Versão responsiva para PC e celular.
+- No celular, a tela de login passa a ser uma versão própria, sem sumir textos.
+- Service worker alterado para não manter HTML/CSS/JS antigos em cache.
+- Mantido cache apenas para imagens do app.

@@ -9,7 +9,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "3.0.0";
+const APP_VERSION = "4.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -32,6 +32,17 @@ const mockupStage = $("#mockupStage");
 const loginMsg = $("#loginMsg");
 const toast = $("#toast");
 const rememberMe = $("#rememberMe");
+
+
+async function clearOldAppCaches() {
+  if (!("caches" in window)) return;
+  try {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter((key) => !key.includes("spani-rh-v4")).map((key) => caches.delete(key)));
+  } catch (error) {
+    console.warn("Não foi possível limpar caches antigos:", error);
+  }
+}
 
 function showToast(msg) {
   toast.textContent = msg;
@@ -313,4 +324,5 @@ async function registerServiceWorker() {
 }
 
 loadRememberedUser();
+clearOldAppCaches();
 registerServiceWorker();

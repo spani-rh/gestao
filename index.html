@@ -3,38 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spani Atacadista - Aplicativo RH</title>
+  <title>Spani Atacadista - Gestão RH</title>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="manifest" href="manifest.json?v=4" />
+  <link rel="stylesheet" href="style.css?v=4" />
   <meta name="theme-color" content="#07111f" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen">
-    <div class="login-overlay"></div>
+    <div class="login-shade"></div>
+
+    <div class="login-brand">
+      <img src="assets/spani-logo-card.png" alt="Spani Atacadista" class="brand-logo" />
+      <h1>Gestão RH</h1>
+      <p>Controle de pessoas, escalas, banco de horas, faltas e avisos ao RH.</p>
+      <div class="brand-badges">
+        <span>Segurança</span>
+        <span>Confiabilidade</span>
+        <span>Atualização em tempo real</span>
+      </div>
+    </div>
+
     <form id="loginForm" class="login-card" autocomplete="off" novalidate>
       <h2>Acesse sua conta</h2>
       <div class="login-underline"></div>
 
       <label class="field-label" for="usuario">Usuário</label>
-      <div class="input-wrap user-wrap">
+      <div class="input-wrap">
         <span class="field-icon">👤</span>
-        <input id="usuario" name="login_user" class="login-input" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+        <input id="usuario" name="sp_usuario_v4" class="login-input" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
       </div>
 
       <label class="field-label" for="senha">Senha</label>
-      <div class="input-wrap pass-wrap">
+      <div class="input-wrap">
         <span class="field-icon">🔒</span>
-        <input id="senha" name="login_pass" class="login-input" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+        <input id="senha" name="sp_senha_v4" class="login-input" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
         <button id="togglePassword" class="toggle-password" type="button" aria-label="Mostrar ou ocultar senha">👁</button>
       </div>
 
       <div class="login-row">
         <label class="remember-box">
           <input id="rememberMe" type="checkbox" checked />
-          <span>Lembrar meu acesso</span>
+          <span>Lembrar meu usuário</span>
         </label>
         <button id="forgotPasswordBtn" class="forgot-link" type="button">Esqueceu sua senha?</button>
       </div>
@@ -74,7 +86,7 @@
         <input id="confirmaSenha" type="password" maxlength="4" minlength="4" inputmode="numeric" placeholder="Confirmar senha" required />
         <button type="submit">Salvar nova senha</button>
       </form>
-      <small>A senha será salva no seu cadastro de usuário no Firestore.</small>
+      <small>A senha será salva no cadastro do usuário no Firestore.</small>
     </div>
   </section>
 
@@ -82,8 +94,7 @@
     <div class="modal-card aviso-card">
       <button class="close" id="closeForgot" type="button">×</button>
       <h2>Recuperar acesso</h2>
-      <p>Se você esqueceu sua senha, procure o RH (Jessica) ou um administrador para redefinir o seu acesso.</p>
-      <p><strong>Orientação:</strong> a recuperação de senha é feita internamente para manter o controle dos acessos.</p>
+      <p>Se você esqueceu sua senha, procure a Jessica/RH ou um administrador para redefinir o acesso.</p>
       <button id="forgotOk" type="button" class="secondary-modal-btn">Entendi</button>
     </div>
   </section>
@@ -127,7 +138,6 @@
   </section>
 
   <div id="toast" class="toast hidden"></div>
-
-  <script type="module" src="script.js?v=3"></script>
+  <script type="module" src="script.js?v=4"></script>
 </body>
 </html>

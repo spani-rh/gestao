@@ -1,11 +1,7 @@
-const CACHE_NAME = "spani-rh-fiel-v3";
-const STATIC_ASSETS = [
-  "./",
-  "./index.html",
-  "./style.css?v=3",
-  "./script.js?v=3",
-  "./manifest.json",
-  "./assets/login-mockup.png",
+const CACHE_NAME = "spani-rh-v4-assets";
+const IMAGE_ASSETS = [
+  "./assets/login-bg-clean.jpg",
+  "./assets/spani-logo-card.png",
   "./assets/dashboard-admin.png",
   "./assets/dashboard-lider.png",
   "./assets/escalas.png",
@@ -16,7 +12,7 @@ const STATIC_ASSETS = [
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)).catch(() => null));
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(IMAGE_ASSETS)).catch(() => null));
   self.skipWaiting();
 });
 
@@ -31,47 +27,31 @@ self.addEventListener("message", (event) => {
   if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
 
-async function networkFirst(request) {
-  const cache = await caches.open(CACHE_NAME);
-  try {
-    const response = await fetch(request, { cache: "no-store" });
-    if (request.method === "GET" && response && response.status === 200) {
-      cache.put(request, response.clone());
-    }
-    return response;
-  } catch (error) {
-    const cached = await cache.match(request, { ignoreSearch: false }) || await cache.match(request, { ignoreSearch: true });
-    if (cached) return cached;
-    throw error;
-  }
-}
-
-async function staleWhileRevalidate(request) {
-  const cache = await caches.open(CACHE_NAME);
-  const cached = await cache.match(request, { ignoreSearch: true });
-  const networkPromise = fetch(request).then((response) => {
-    if (request.method === "GET" && response && response.status === 200) {
-      cache.put(request, response.clone());
-    }
-    return response;
-  }).catch(() => cached);
-  return cached || networkPromise;
-}
-
 self.addEventListener("fetch", (event) => {
-  const { request } = event;
+  const request = event.request;
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  const isDocument = request.mode === "navigate" || request.destination === "document";
-  const isCoreFile = ["/", "/index.html", "/style.css", "/script.js", "/manifest.json", "/service-worker.js"].includes(url.pathname);
-
-  if (isDocument || isCoreFile) {
-    event.respondWith(networkFirst(request));
+  const isCore = request.mode === "navigate" || ["document", "script", "style", "manifest"].includes(request.destination);
+  if (isCore) {
+    event.respondWith(fetch(request, { cache: "no-store" }).catch(() => caches.match("./index.html")));
     return;
   }
 
-  event.respondWith(staleWhileRevalidate(request));
+  if (request.destination === "image") {
+    event.respondWith(
+      caches.match(request, { ignoreSearch: true }).then((cached) => {
+        const network = fetch(request).then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        }).catch(() => cached);
+        return cached || network;
+      })
+    );
+  }
 });
