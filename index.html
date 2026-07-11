@@ -4,18 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spani Atacadista - Aplicativo RH</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=3" />
   <meta name="theme-color" content="#07111f" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen">
-    <form id="loginForm" class="login-hot-form" autocomplete="off">
-      <input id="usuario" class="login-input user" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" required />
-      <input id="senha" class="login-input pass" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" required />
-      <label class="remember-box">
-        <input type="checkbox" checked /> <span>Lembrar meu acesso</span>
-      </label>
+    <div class="login-overlay"></div>
+    <form id="loginForm" class="login-card" autocomplete="off" novalidate>
+      <h2>Acesse sua conta</h2>
+      <div class="login-underline"></div>
+
+      <label class="field-label" for="usuario">Usuário</label>
+      <div class="input-wrap user-wrap">
+        <span class="field-icon">👤</span>
+        <input id="usuario" name="login_user" class="login-input" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+      </div>
+
+      <label class="field-label" for="senha">Senha</label>
+      <div class="input-wrap pass-wrap">
+        <span class="field-icon">🔒</span>
+        <input id="senha" name="login_pass" class="login-input" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+        <button id="togglePassword" class="toggle-password" type="button" aria-label="Mostrar ou ocultar senha">👁</button>
+      </div>
+
+      <div class="login-row">
+        <label class="remember-box">
+          <input id="rememberMe" type="checkbox" checked />
+          <span>Lembrar meu acesso</span>
+        </label>
+        <button id="forgotPasswordBtn" class="forgot-link" type="button">Esqueceu sua senha?</button>
+      </div>
+
       <button class="login-button" type="submit">Entrar</button>
       <p id="loginMsg" class="login-msg"></p>
     </form>
@@ -28,7 +51,7 @@
         <span id="userRole">Perfil</span>
       </div>
 
-      <button class="hot nav dashboard" data-page="dashboard" title="Dashboard"></button>
+      <button class="hot nav dashboard" data-page="dashboard" title="Início"></button>
       <button class="hot nav colaboradores" data-page="colaboradores" title="Colaboradores"></button>
       <button class="hot nav escalas" data-page="escalas" title="Escalas"></button>
       <button class="hot nav banco" data-page="banco" title="Banco de Horas"></button>
@@ -47,11 +70,21 @@
       <h2>Troque sua senha</h2>
       <p>Por segurança, escolha uma nova senha de 4 dígitos para continuar usando o sistema.</p>
       <form id="passwordForm">
-        <input id="novaSenha" type="password" maxlength="4" minlength="4" placeholder="Nova senha de 4 dígitos" required />
-        <input id="confirmaSenha" type="password" maxlength="4" minlength="4" placeholder="Confirmar senha" required />
+        <input id="novaSenha" type="password" maxlength="4" minlength="4" inputmode="numeric" placeholder="Nova senha de 4 dígitos" required />
+        <input id="confirmaSenha" type="password" maxlength="4" minlength="4" inputmode="numeric" placeholder="Confirmar senha" required />
         <button type="submit">Salvar nova senha</button>
       </form>
       <small>A senha será salva no seu cadastro de usuário no Firestore.</small>
+    </div>
+  </section>
+
+  <section id="forgotModal" class="modal hidden">
+    <div class="modal-card aviso-card">
+      <button class="close" id="closeForgot" type="button">×</button>
+      <h2>Recuperar acesso</h2>
+      <p>Se você esqueceu sua senha, procure o RH (Jessica) ou um administrador para redefinir o seu acesso.</p>
+      <p><strong>Orientação:</strong> a recuperação de senha é feita internamente para manter o controle dos acessos.</p>
+      <button id="forgotOk" type="button" class="secondary-modal-btn">Entendi</button>
     </div>
   </section>
 
@@ -95,6 +128,6 @@
 
   <div id="toast" class="toast hidden"></div>
 
-  <script type="module" src="script.js"></script>
+  <script type="module" src="script.js?v=3"></script>
 </body>
 </html>

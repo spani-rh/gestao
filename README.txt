@@ -41,3 +41,11 @@ Alteração desta versão:
 - Para líderes, a tela principal fica como "Minha Área"/resumo do setor na experiência do sistema.
 
 - Correção da tela de login: campos e botão ficaram invisíveis sobre a arte, evitando duplicação visual.
+
+
+Correções v3:
+- Tela de login reconstruída com campos reais dentro da caixa correta.
+- Checkbox "Lembrar meu acesso" funcional.
+- Botão "Esqueceu sua senha?" funcional com orientação ao RH/Jessica.
+- Cache do PWA corrigido para buscar atualizações do servidor sem depender de limpar histórico/cookies.
+- Service Worker atualizado para evitar abrir versões antigas do site.

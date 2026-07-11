@@ -1,4 +1,3 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   getFirestore,
@@ -10,6 +9,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
+const APP_VERSION = "3.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -31,15 +31,36 @@ const appScreen = $("#appScreen");
 const mockupStage = $("#mockupStage");
 const loginMsg = $("#loginMsg");
 const toast = $("#toast");
+const rememberMe = $("#rememberMe");
 
 function showToast(msg) {
   toast.textContent = msg;
   toast.classList.remove("hidden");
-  setTimeout(() => toast.classList.add("hidden"), 3500);
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => toast.classList.add("hidden"), 3500);
 }
 
 function normalize(v) {
   return String(v || "").trim().toLowerCase();
+}
+
+function saveRememberedUser() {
+  if (rememberMe.checked) {
+    localStorage.setItem("spaniRememberUser", $("#usuario").value.trim());
+    localStorage.setItem("spaniRememberChecked", "true");
+  } else {
+    localStorage.removeItem("spaniRememberUser");
+    localStorage.setItem("spaniRememberChecked", "false");
+  }
+}
+
+function loadRememberedUser() {
+  const remembered = localStorage.getItem("spaniRememberUser");
+  const checked = localStorage.getItem("spaniRememberChecked");
+  rememberMe.checked = checked !== "false";
+  if (remembered && rememberMe.checked) {
+    $("#usuario").value = remembered;
+  }
 }
 
 async function findUser(usuario, senha) {
@@ -77,13 +98,15 @@ function setPage(page) {
     mockupStage.classList.add(isAdmin() ? "dashboard-admin" : "dashboard-lider");
   }
 
-  $("#sendAvisoBtn").style.display = page === "dashboard" || page === "avisos" || !isAdmin() ? "block" : "block";
-  $("#newScheduleBtn").style.display = page === "escalas" || !isAdmin() ? "block" : "none";
+  $("#sendAvisoBtn").style.display = "block";
+  $("#newScheduleBtn").style.display = (page === "escalas" || !isAdmin()) ? "block" : "none";
 }
 
 function enterApp(user) {
   currentUser = user;
   currentUserDocId = user.id;
+  saveRememberedUser();
+  sessionStorage.setItem("spaniCurrentUser", user.id);
   loginScreen.classList.add("hidden");
   appScreen.classList.remove("hidden");
   $("#userName").textContent = user.nome || user.usuario || "Usuário";
@@ -98,8 +121,12 @@ function enterApp(user) {
 $("#loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   loginMsg.textContent = "Validando acesso...";
-  const usuario = $("#usuario").value;
-  const senha = $("#senha").value;
+  const usuario = $("#usuario").value.trim();
+  const senha = $("#senha").value.trim();
+  if (!usuario || !senha) {
+    loginMsg.textContent = "Preencha usuário e senha.";
+    return;
+  }
   try {
     const user = await findUser(usuario, senha);
     if (!user || user.ativo === false) {
@@ -113,6 +140,21 @@ $("#loginForm").addEventListener("submit", async (e) => {
     loginMsg.textContent = "Erro ao conectar no Firebase. Verifique as regras do Firestore.";
   }
 });
+
+$("#togglePassword").addEventListener("click", () => {
+  const input = $("#senha");
+  input.type = input.type === "password" ? "text" : "password";
+  $("#togglePassword").textContent = input.type === "password" ? "👁" : "🙈";
+});
+
+rememberMe.addEventListener("change", saveRememberedUser);
+$("#usuario").addEventListener("input", () => { if (rememberMe.checked) saveRememberedUser(); });
+
+function openForgotModal() { $("#forgotModal").classList.remove("hidden"); }
+function closeForgotModal() { $("#forgotModal").classList.add("hidden"); }
+$("#forgotPasswordBtn").addEventListener("click", openForgotModal);
+$("#closeForgot").addEventListener("click", closeForgotModal);
+$("#forgotOk").addEventListener("click", closeForgotModal);
 
 $("#passwordForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -129,7 +171,8 @@ $("#passwordForm").addEventListener("submit", async (e) => {
   try {
     await updateDoc(doc(db, "usuarios", currentUserDocId), {
       senha: nova,
-      senhaAlterada: true
+      senhaAlterada: true,
+      atualizadoEm: serverTimestamp()
     });
     currentUser.senha = nova;
     currentUser.senhaAlterada = true;
@@ -148,9 +191,12 @@ document.querySelectorAll(".nav[data-page]").forEach((btn) => {
 $("#logoutBtn").addEventListener("click", () => {
   currentUser = null;
   currentUserDocId = null;
+  sessionStorage.removeItem("spaniCurrentUser");
   appScreen.classList.add("hidden");
   loginScreen.classList.remove("hidden");
   $("#senha").value = "";
+  loginMsg.textContent = "";
+  if (!rememberMe.checked) $("#usuario").value = "";
 });
 
 $("#sendAvisoBtn").addEventListener("click", () => {
@@ -181,7 +227,8 @@ $("#avisoForm").addEventListener("submit", async (e) => {
       lido: false,
       ativo: true,
       dataEnvio: new Date().toISOString().slice(0, 10),
-      criadoEm: serverTimestamp()
+      criadoEm: serverTimestamp(),
+      atualizadoEm: serverTimestamp()
     });
     $("#avisoForm").reset();
     $("#avisoModal").classList.add("hidden");
@@ -219,7 +266,8 @@ $("#scheduleForm").addEventListener("submit", async (e) => {
       observacao: $("#escalaObs").value.trim(),
       status: "rascunho",
       ativo: true,
-      criadoEm: serverTimestamp()
+      criadoEm: serverTimestamp(),
+      atualizadoEm: serverTimestamp()
     });
     $("#scheduleForm").reset();
     $("#scheduleModal").classList.add("hidden");
@@ -231,8 +279,38 @@ $("#scheduleForm").addEventListener("submit", async (e) => {
   }
 });
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js").catch(console.warn);
-  });
+function closeAllModalsOnBackdropClick(event) {
+  if (event.target.classList.contains("modal")) event.target.classList.add("hidden");
 }
+document.querySelectorAll(".modal").forEach((modal) => modal.addEventListener("click", closeAllModalsOnBackdropClick));
+
+async function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) return;
+  try {
+    const reg = await navigator.serviceWorker.register(`./service-worker.js?v=${APP_VERSION}`, { updateViaCache: "none" });
+    if (reg.waiting) {
+      reg.waiting.postMessage({ type: "SKIP_WAITING" });
+    }
+    reg.addEventListener("updatefound", () => {
+      const newWorker = reg.installing;
+      if (!newWorker) return;
+      newWorker.addEventListener("statechange", () => {
+        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+          showToast("Atualização encontrada. Recarregando o sistema...");
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      });
+    });
+    let reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (reloading) return;
+      reloading = true;
+      window.location.reload();
+    });
+  } catch (error) {
+    console.warn("Falha ao registrar service worker:", error);
+  }
+}
+
+loadRememberedUser();
+registerServiceWorker();

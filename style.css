@@ -1,8 +1,13 @@
-
 * { box-sizing: border-box; }
-html, body { width: 100%; min-height: 100%; margin: 0; font-family: Inter, Segoe UI, Arial, sans-serif; background: #020914; color: #fff; }
+html, body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  font-family: Inter, Segoe UI, Arial, sans-serif;
+  background: #020914;
+  color: #fff;
+}
 button, input, select, textarea { font: inherit; }
-
 .hidden { display: none !important; }
 
 .login-screen {
@@ -14,84 +19,146 @@ button, input, select, textarea { font: inherit; }
   position: relative;
   overflow: hidden;
 }
-
-.login-hot-form {
+.login-overlay {
   position: absolute;
-  right: clamp(4%, 6vw, 7%);
-  top: 17%;
-  width: min(560px, 34vw);
-  min-width: 420px;
-  height: 580px;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(1,7,15,.08) 0%, rgba(1,7,15,.05) 45%, rgba(1,7,15,.25) 100%);
 }
-
-.login-input {
+.login-card {
   position: absolute;
-  left: 8%;
-  width: 84%;
-  height: 58px;
-  border: none;
-  background: transparent;
+  right: clamp(3%, 5vw, 6%);
+  top: 19%;
+  width: min(29vw, 520px);
+  min-width: 420px;
+  min-height: 555px;
+  padding: 44px 42px 34px;
+  border-radius: 34px;
+  background: rgba(4, 15, 30, 0.78);
+  border: 1px solid rgba(142, 163, 192, 0.30);
+  box-shadow: 0 30px 80px rgba(0,0,0,.32);
+  backdrop-filter: blur(7px);
+  z-index: 2;
+}
+.login-card h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+.login-underline {
+  width: 56px;
+  height: 4px;
+  border-radius: 99px;
+  background: #1f8bff;
+  margin: 16px 0 34px;
+}
+.field-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: #f2f6ff;
+}
+.input-wrap {
+  position: relative;
+  margin-bottom: 28px;
+}
+.login-input {
+  width: 100%;
+  height: 60px;
+  border: 1px solid rgba(145, 165, 193, 0.32);
+  background: rgba(2, 10, 20, 0.50);
   color: #eef6ff;
   border-radius: 14px;
-  padding: 0 20px 0 54px;
+  padding: 0 54px;
   outline: none;
-  font-size: 20px;
-  letter-spacing: 0.2px;
-  box-shadow: none;
-  text-shadow: 0 1px 8px rgba(0,0,0,.45);
+  font-size: 18px;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
-
-.login-input::placeholder { color: transparent; }
+.login-input::placeholder { color: #74839a; }
 .login-input:focus {
-  background: rgba(9, 19, 34, .12);
-  box-shadow: inset 0 0 0 2px rgba(40, 133, 255, .18);
+  border-color: rgba(39, 135, 255, 0.75);
+  box-shadow: 0 0 0 3px rgba(39, 135, 255, 0.15);
+  background: rgba(2, 10, 20, 0.7);
 }
-.login-input.user { top: 173px; }
-.login-input.pass { top: 294px; }
-
-.remember-box {
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover,
+.login-input:-webkit-autofill:focus,
+.login-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px rgba(2,10,20,.92) inset !important;
+  -webkit-text-fill-color: #eef6ff !important;
+  caret-color: #eef6ff;
+  border: 1px solid rgba(145, 165, 193, 0.32);
+}
+.field-icon {
   position: absolute;
-  left: 8%;
-  top: 399px;
-  width: 48%;
-  height: 30px;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: .85;
+  font-size: 22px;
+  pointer-events: none;
+}
+.toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: #c5d3e8;
+  font-size: 20px;
+  cursor: pointer;
+}
+.login-row {
+  margin-top: 2px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.remember-box {
+  display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: transparent;
-  font-size: 0;
+  color: #dce8f7;
+  font-size: 14px;
 }
-.remember-box span { display: none; }
 .remember-box input {
-  width: 100%;
-  height: 100%;
+  width: 20px;
+  height: 20px;
   margin: 0;
-  opacity: 0;
+  accent-color: #2a8bff;
   cursor: pointer;
 }
-
-.login-button {
-  position: absolute;
-  left: 8%;
-  top: 452px;
-  width: 84%;
-  height: 74px;
-  border: none;
-  border-radius: 18px;
-  color: transparent;
-  font-size: 0;
+.forgot-link {
+  border: 0;
   background: transparent;
+  color: #2a8bff;
   cursor: pointer;
-  box-shadow: none;
+  font-size: 14px;
+  padding: 0;
 }
-.login-button:hover { background: rgba(255,140,18,.06); }
+.forgot-link:hover { text-decoration: underline; }
+.login-button {
+  margin-top: 24px;
+  width: 100%;
+  height: 72px;
+  border: none;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 900;
+  background: linear-gradient(180deg, #ff9418, #ff7300);
+  cursor: pointer;
+  box-shadow: 0 20px 45px rgba(255, 115, 0, .25);
+}
+.login-button:hover { filter: brightness(1.06); }
 .login-msg {
-  position: absolute;
-  left: 8%;
-  top: 536px;
+  min-height: 24px;
+  margin: 14px 2px 0;
   color: #ffb3a9;
   font-weight: 700;
-  text-shadow: 0 1px 10px rgba(0,0,0,.45);
 }
 
 .app-screen { min-height: 100vh; background: #06101c; overflow: hidden; }
@@ -103,7 +170,6 @@ button, input, select, textarea { font: inherit; }
   background-size: cover;
   background-position: center top;
 }
-
 .mockup-stage.dashboard-admin { background-image: url("assets/dashboard-admin.png"); }
 .mockup-stage.dashboard-lider { background-image: url("assets/dashboard-lider.png"); }
 .mockup-stage.escalas { background-image: url("assets/escalas.png"); }
@@ -123,7 +189,6 @@ button, input, select, textarea { font: inherit; }
   color: transparent;
   pointer-events: none;
 }
-
 .hot {
   position: absolute;
   border: 0;
@@ -131,7 +196,6 @@ button, input, select, textarea { font: inherit; }
   cursor: pointer;
 }
 .hot:hover { background: rgba(255, 122, 0, .08); outline: 1px solid rgba(255, 122, 0, .25); border-radius: 10px; }
-
 .nav { left: 0.8%; width: 12%; height: 44px; }
 .nav.dashboard { top: 14.0%; }
 .nav.colaboradores { top: 21.5%; }
@@ -141,7 +205,6 @@ button, input, select, textarea { font: inherit; }
 .nav.avisos { top: 52.0%; }
 .nav.eventos { top: 58.5%; }
 .nav.sair { bottom: 2%; height: 52px; }
-
 .floating-action {
   position: absolute;
   right: 36px;
@@ -193,7 +256,7 @@ button, input, select, textarea { font: inherit; }
   outline: none;
 }
 .modal-card label { color: #e9f2ff; font-weight: 700; }
-.modal-card button[type="submit"] {
+.modal-card button[type="submit"], .secondary-modal-btn {
   width: 100%;
   border: none;
   background: linear-gradient(180deg, #ff8c12, #ff6400);
@@ -226,38 +289,36 @@ button, input, select, textarea { font: inherit; }
 
 @media (max-width: 900px) {
   .login-screen {
-    background-image: linear-gradient(rgba(1,7,15,.1), rgba(1,7,15,.65)), url("assets/login-mockup.png");
-    background-position: center;
+    background-image: linear-gradient(rgba(1,7,15,.20), rgba(1,7,15,.72)), url("assets/login-mockup.png");
+    background-position: 42% center;
   }
-  .login-hot-form {
+  .login-card {
     right: 5%;
     left: 5%;
     top: auto;
-    bottom: 34px;
+    bottom: 24px;
     width: auto;
     min-width: 0;
-    height: 330px;
-    background: rgba(4, 14, 27, .78);
-    border: 1px solid rgba(150, 169, 196, .28);
+    min-height: auto;
+    padding: 28px 22px 22px;
     border-radius: 24px;
-    padding: 20px;
-    backdrop-filter: blur(10px);
   }
-  .login-input { left: 8%; width: 84%; height: 54px; background: rgba(6,16,30,.78); border: 1px solid rgba(155,174,203,.24); }
-  .login-input::placeholder { color: #8e9bb0; }
-  .login-input.user { top: 64px; }
-  .login-input.pass { top: 140px; }
-  .remember-box { top: 214px; width: auto; height: auto; font-size: 13px; color: #d8e5f7; }
-  .remember-box span { display: inline; }
-  .remember-box input { width: 22px; height: 22px; opacity: 1; accent-color: #2485ff; }
-  .login-button { top: 255px; height: 58px; font-size: 20px; color: white; background: linear-gradient(180deg, #ff8c12, #ff6400); }
-  .login-msg { top: 316px; }
+  .login-card h2 { font-size: 24px; }
+  .login-underline { margin-bottom: 26px; }
+  .field-label { font-size: 15px; }
+  .login-input { height: 54px; font-size: 17px; }
+  .login-row { align-items: flex-start; }
+  .login-button { height: 58px; font-size: 22px; }
 
   .mockup-stage {
     background-size: auto 100vh;
     background-position: left top;
     overflow-x: auto;
   }
-  .floating-action { left: 16px; right: auto; bottom: 20px; }
-  .floating-action.secondary { left: 190px; right: auto; }
+  .floating-action, .floating-action.secondary {
+    right: 14px;
+    left: 14px;
+    bottom: 16px;
+  }
+  .floating-action.secondary { bottom: 72px; }
 }
