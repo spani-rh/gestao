@@ -628,3 +628,212 @@ tr:last-child td{border-bottom:0}
   .add-button{width:100%;margin-top:16px}
   .form-grid{grid-template-columns:1fr}
 }
+
+
+/* ===== v15 ENTRADA COM FACHADA OFICIAL ===== */
+.login-screen{
+  min-height:100dvh!important;
+  position:relative!important;
+  overflow:hidden!important;
+  display:grid!important;
+  place-items:center!important;
+  padding:34px!important;
+  background:
+    linear-gradient(90deg,rgba(2,8,18,.86) 0%,rgba(2,8,18,.62) 42%,rgba(2,8,18,.82) 100%),
+    url("assets/fachada-spani-login.png") center/cover no-repeat!important;
+}
+.login-screen:before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:
+    radial-gradient(circle at 18% 18%,rgba(37,99,235,.20),transparent 30%),
+    radial-gradient(circle at 87% 8%,rgba(255,122,0,.14),transparent 24%),
+    linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.48))!important;
+  pointer-events:none!important;
+}
+.login-screen:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:
+    linear-gradient(120deg,transparent 0 68%,rgba(255,122,0,.24) 68.12%,transparent 68.34%),
+    radial-gradient(circle at bottom left,rgba(75,205,45,.16),transparent 22%)!important;
+  pointer-events:none!important;
+}
+.login-overlay{display:none!important}
+.login-orb{display:none!important}
+.login-shell{
+  width:min(1280px,100%)!important;
+  position:relative!important;
+  z-index:2!important;
+  display:grid!important;
+  grid-template-columns:1.05fr .95fr!important;
+  align-items:center!important;
+  gap:64px!important;
+}
+.login-hero{
+  color:#fff!important;
+  padding-left:4px!important;
+  text-shadow:0 8px 28px rgba(0,0,0,.46)!important;
+}
+.login-logo{
+  display:block!important;
+  width:min(345px,72%)!important;
+  margin:0 0 28px!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 16px 24px rgba(0,0,0,.58))!important;
+}
+.login-hero h1{
+  margin:0 0 14px!important;
+  color:#ff7a00!important;
+  font-size:clamp(66px,7.5vw,118px)!important;
+  line-height:.9!important;
+  letter-spacing:-3px!important;
+  font-weight:950!important;
+}
+.login-hero p{
+  max-width:560px!important;
+  margin:0!important;
+  color:#e9f1ff!important;
+  font-size:clamp(22px,2vw,30px)!important;
+  line-height:1.35!important;
+  font-weight:650!important;
+}
+.hero-metrics{display:none!important}
+.login-card{
+  width:min(520px,100%)!important;
+  justify-self:center!important;
+  padding:42px!important;
+  border-radius:32px!important;
+  background:rgba(5,14,28,.82)!important;
+  border:1px solid rgba(183,201,226,.28)!important;
+  box-shadow:0 38px 110px rgba(0,0,0,.55)!important;
+  backdrop-filter:blur(18px)!important;
+  color:#fff!important;
+}
+.login-card-title{
+  display:flex!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+  align-items:flex-start!important;
+  margin-bottom:30px!important;
+}
+.login-card h2{
+  margin:0!important;
+  font-size:34px!important;
+  line-height:1.1!important;
+  font-weight:950!important;
+  color:#fff!important;
+}
+.login-card-title span{
+  background:rgba(37,99,235,.15)!important;
+  color:#7ab5ff!important;
+  border:1px solid rgba(122,181,255,.28)!important;
+  border-radius:999px!important;
+  padding:7px 11px!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+}
+.login-card label{
+  display:block!important;
+  margin:18px 0 9px!important;
+  font-weight:900!important;
+  color:#f4f8ff!important;
+}
+.field{
+  height:64px!important;
+  border:1px solid rgba(159,178,204,.38)!important;
+  border-radius:17px!important;
+  background:rgba(4,14,28,.76)!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  padding:0 16px!important;
+}
+.field:focus-within{
+  border-color:#2d8cff!important;
+  box-shadow:0 0 0 4px rgba(45,140,255,.14)!important;
+  background:rgba(5,18,35,.92)!important;
+}
+.field span{font-size:21px!important}
+.field input{
+  flex:1!important;
+  min-width:0!important;
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+  color:#fff!important;
+  font-weight:750!important;
+  font-size:17px!important;
+}
+.field input::placeholder{color:#7f91ac!important}
+.field button{
+  border:0!important;
+  background:transparent!important;
+  color:#fff!important;
+  font-size:19px!important;
+}
+.login-row{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  gap:12px!important;
+  margin:20px 0 26px!important;
+  flex-wrap:wrap!important;
+}
+.remember{
+  display:flex!important;
+  gap:9px!important;
+  align-items:center!important;
+  margin:0!important;
+  color:#dce8f7!important;
+  font-weight:700!important;
+}
+.remember input{accent-color:#2d8cff!important}
+.link-btn{
+  border:0!important;
+  background:transparent!important;
+  color:#49a3ff!important;
+  font-weight:900!important;
+}
+.primary-btn{
+  width:100%!important;
+  height:64px!important;
+  border:0!important;
+  border-radius:17px!important;
+  background:linear-gradient(135deg,#ff9b25,#ff7a00)!important;
+  color:white!important;
+  font-size:22px!important;
+  font-weight:950!important;
+  box-shadow:0 20px 42px rgba(255,122,0,.30)!important;
+}
+.message{
+  min-height:22px!important;
+  margin:12px 0 0!important;
+  color:#ffb4aa!important;
+  font-weight:900!important;
+}
+
+@media(max-width:900px){
+  .login-screen{
+    padding:20px!important;
+    align-items:start!important;
+    background:
+      linear-gradient(180deg,rgba(2,8,18,.80),rgba(2,8,18,.92)),
+      url("assets/fachada-spani-login.png") center/cover no-repeat!important;
+  }
+  .login-shell{
+    grid-template-columns:1fr!important;
+    gap:24px!important;
+    min-height:calc(100dvh - 40px)!important;
+    align-content:center!important;
+  }
+  .login-hero{text-align:center!important;padding:0!important}
+  .login-logo{margin:0 auto 18px!important;width:min(250px,72%)!important}
+  .login-hero h1{font-size:clamp(48px,15vw,76px)!important;letter-spacing:-1px!important}
+  .login-hero p{margin:0 auto!important;font-size:17px!important}
+  .login-card{padding:24px!important;border-radius:24px!important}
+  .login-card h2{font-size:28px!important}
+}

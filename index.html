@@ -8,30 +8,18 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="manifest" href="manifest.json?v=14" />
-  <link rel="stylesheet" href="style.css?v=14" />
+  <link rel="manifest" href="manifest.json?v=15" />
+  <link rel="stylesheet" href="style.css?v=15" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen">
-    <div class="login-orb one"></div>
-    <div class="login-orb two"></div>
+    <div class="login-overlay"></div>
 
     <div class="login-shell">
       <section class="login-hero">
-        <img src="assets/logo.svg" alt="Spani Atacadista" class="login-logo" />
+        <img src="assets/spani-logo-oficial.png" alt="Spani Atacadista" class="login-logo" />
         <h1>Gestão RH</h1>
-        <p>Organização de escalas, banco de horas, férias, eventos e avisos para o RH.</p>
-
-        <div class="hero-metrics">
-          <div>
-            <strong>4</strong>
-            <span>Administradores</span>
-          </div>
-          <div>
-            <strong>7</strong>
-            <span>Líderes</span>
-          </div>
-        </div>
+        <p>Acesso interno para líderes e administradores.</p>
       </section>
 
       <form id="loginForm" class="login-card" autocomplete="off" novalidate>
@@ -43,22 +31,22 @@
         <label>Usuário</label>
         <div class="field">
           <span>👤</span>
-          <input id="usuario" name="usuario_v14" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+          <input id="usuario" name="usuario_v15" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
         </div>
 
         <label>Senha</label>
         <div class="field">
           <span>🔒</span>
-          <input id="senha" name="senha_v14" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required />
+          <input id="senha" name="senha_v15" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required />
           <button id="togglePassword" type="button" aria-label="Mostrar ou ocultar senha">👁️</button>
         </div>
 
         <div class="login-row">
           <label class="remember">
             <input id="rememberMe" type="checkbox" checked />
-            <span>Lembrar usuário</span>
+            <span>Lembrar meu acesso</span>
           </label>
-          <button id="forgotPasswordBtn" type="button" class="link-btn">Esqueceu a senha?</button>
+          <button id="forgotPasswordBtn" type="button" class="link-btn">Esqueceu sua senha?</button>
         </div>
 
         <button class="primary-btn" type="submit">Entrar</button>
@@ -125,6 +113,6 @@
   </section>
 
   <div id="toast" class="toast hidden"></div>
-  <script type="module" src="script.js?v=14"></script>
+  <script type="module" src="script.js?v=15"></script>
 </body>
 </html>
