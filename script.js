@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "17.0.0";
+const APP_VERSION = "18.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -86,10 +86,13 @@ async function loadAll(){
 
 
 const USUARIOS_FALLBACK = [
+  // Jessica/RH principal: aceita a senha padrão e a senha atual para destravar o acesso.
+  { id:"jessica", usuario:"jessica", senha:"2649", nome:"Jessica", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
+  { id:"jessica", usuario:"jessica", senha:"7571", nome:"Jessica", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
+
   { id:"anizia", usuario:"anizia", senha:"4827", nome:"Anizia", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
   { id:"jadson", usuario:"jadson", senha:"7394", nome:"Jadson", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
   { id:"jose_mathias", usuario:"jose_mathias", senha:"9158", nome:"José Mathias", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
-  { id:"jessica", usuario:"jessica", senha:"2649", nome:"Jessica", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
   { id:"andre", usuario:"andre", senha:"6382", nome:"André", perfil:"lider", acessoTotal:false, setor:"acougue", setorNome:"Açougue", ativo:true, senhaAlterada:true },
   { id:"jacqueline", usuario:"jacqueline", senha:"5073", nome:"Jacqueline", perfil:"lider", acessoTotal:false, setor:"pereciveis", setorNome:"Perecíveis", ativo:true, senhaAlterada:true },
   { id:"heidi", usuario:"heidi", senha:"8461", nome:"Heidi", perfil:"lider", acessoTotal:false, setor:"flv", setorNome:"FLV", ativo:true, senhaAlterada:true },
@@ -132,20 +135,36 @@ function fallbackUser(usuario, senha){
 async function findUser(usuario, senha){
   const typed = normalize(usuario);
 
-  // 1) Tentativa direta pelo ID do documento: usuarios/jessica, usuarios/anizia etc.
+  // 1) Desbloqueio imediato: usuários essenciais locais, especialmente Jessica/RH.
+  // Isso impede o login de travar se o Firebase demorar ou se o documento dela estiver com diferença de campo.
+  const local = fallbackUser(usuario, senha);
+  if(local) return local;
+
+  // 2) Tentativa direta pelo ID exato digitado.
   try{
-    const direct = await withTimeout(getDoc(doc(db, "usuarios", typed)), 5000, "Firebase demorou para responder.");
-    if(direct.exists()){
-      const data = { id: direct.id, ...direct.data() };
+    const directExact = await withTimeout(getDoc(doc(db, "usuarios", String(usuario || "").trim())), 4500, "Firebase demorou para responder.");
+    if(directExact.exists()){
+      const data = { id: directExact.id, ...directExact.data() };
       if(data.ativo !== false && passwordMatches(data, senha)) return data;
     }
   }catch(err){
-    console.warn("Busca direta no Firebase falhou:", err);
+    console.warn("Busca direta exata falhou:", err);
   }
 
-  // 2) Tentativa lendo a coleção usuarios.
+  // 3) Tentativa direta pelo ID em minúsculo.
   try{
-    await withTimeout(loadCollection("usuarios"), 7000, "Firebase demorou para carregar usuários.");
+    const directLower = await withTimeout(getDoc(doc(db, "usuarios", typed)), 4500, "Firebase demorou para responder.");
+    if(directLower.exists()){
+      const data = { id: directLower.id, ...directLower.data() };
+      if(data.ativo !== false && passwordMatches(data, senha)) return data;
+    }
+  }catch(err){
+    console.warn("Busca direta minúscula falhou:", err);
+  }
+
+  // 4) Tentativa lendo a coleção usuarios.
+  try{
+    await withTimeout(loadCollection("usuarios"), 6500, "Firebase demorou para carregar usuários.");
     const found = state.usuarios.find(u =>
       u.ativo !== false &&
       userMatches(u, u.id, usuario) &&
@@ -156,8 +175,7 @@ async function findUser(usuario, senha){
     console.warn("Busca na coleção usuarios falhou:", err);
   }
 
-  // 3) Fallback temporário para não travar o acesso se o Firebase falhar.
-  return fallbackUser(usuario, senha);
+  return null;
 }
 
 function rememberLoad(){
@@ -232,7 +250,7 @@ $("#loginForm").addEventListener("submit", async (e)=>{
         showToast("Login feito. Alguns dados podem não ter carregado.");
       });
 
-    if(!u.senhaAlterada && !String(currentUserId || "").startsWith("fallback")){
+    if(!u.senhaAlterada && u.id !== "jessica"){
       setTimeout(() => openPasswordModal(), 400);
     }
 
@@ -638,7 +656,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-entrada-fachada-v17")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-jessica-v18")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;

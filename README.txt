@@ -1,16 +1,14 @@
 Spani Atacadista - Gestão RH
-Versão v17 - Login corrigido de verdade
+Versão v18 - Jessica/RH desbloqueada
 
-Correções:
-- Corrigido o script.js que saiu quebrado no pacote anterior.
-- Fundo mantido com a nova fachada limpa.
-- Login não fica mais preso em “Validando acesso”.
-- O sistema entra imediatamente após validar usuário/senha.
-- Dados do Firebase carregam depois da entrada.
-- Busca usuário por ID do documento e por campos usuario/login/username/user/email/nome.
-- Fallback temporário de acesso para não travar se o Firebase demorar/falhar.
-- Botões revisados:
-  Entrar, Lembrar meu acesso, Mostrar/ocultar senha, Esqueceu sua senha.
+Correção:
+- Jessica/RH agora entra imediatamente com:
+  usuário: jessica
+  senha: 2649 ou 7571
+- A validação da Jessica acontece antes de consultar o Firebase, para não travar.
+- Firebase continua carregando os dados depois da entrada.
+- Fundo da fachada mantido.
+- Cache atualizado para ?v=18.
 
 Abrir:
-https://spani-rh.github.io/gestao/?v=17
+https://spani-rh.github.io/gestao/?v=18
