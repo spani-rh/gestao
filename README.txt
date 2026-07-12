@@ -1,16 +1,20 @@
 Spani Atacadista - Gestão RH
-Versão v15 - Entrada com fachada oficial
+Versão v16 - Fundo atualizado + login corrigido
 
-Alterações:
-- Tela de entrada usando a fachada enviada pelo usuário como fundo.
-- Logo oficial enviado pelo usuário.
-- Texto da entrada: apenas “Gestão RH” + subtítulo curto.
-- Login real em HTML/CSS/JS.
-- Sem imagem falsa de botão.
-- Sem texto duplicado.
-- Sem “Aplicativo RH”.
-- Sem “Spani Atacadista” escrito de novo abaixo do logo.
-- Firebase e sistema interno preservados.
+Correções:
+- Fundo da abertura trocado pela nova imagem limpa enviada pelo usuário.
+- Login corrigido para não ficar preso em “Validando acesso...”.
+- Busca de usuário mais robusta:
+  - tenta primeiro pelo ID do documento em usuarios;
+  - depois busca por usuario/login/username/user/email/nome;
+  - compara senha como texto.
+- Botões da entrada revisados:
+  - Entrar
+  - Lembrar meu acesso
+  - Mostrar/ocultar senha
+  - Esqueceu sua senha
+- Sistema interno e Firebase preservados.
+- Cache atualizado para ?v=16.
 
 Abrir:
-https://spani-rh.github.io/gestao/?v=15
+https://spani-rh.github.io/gestao/?v=16

@@ -1,11 +1,11 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
-  getFirestore, collection, getDocs, addDoc, doc, updateDoc,
+  getFirestore, collection, getDocs, getDoc, addDoc, doc, updateDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "15.0.0";
+const APP_VERSION = "16.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -84,9 +84,57 @@ async function loadAll(){
   await Promise.all(collections.map(loadCollection));
 }
 
+
+function withTimeout(promise, ms, label){
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(label || "Tempo de conexão esgotado.")), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
+function passwordMatches(user, senha){
+  const typed = String(senha || "").trim();
+  const saved = String(user?.senha ?? user?.password ?? user?.pin ?? "").trim();
+  return saved === typed;
+}
+
+function userMatches(user, id, usuario){
+  const typed = normalize(usuario);
+  const fields = [
+    id,
+    user?.usuario,
+    user?.login,
+    user?.username,
+    user?.user,
+    user?.email,
+    user?.nome
+  ];
+  return fields.some(v => normalize(v) === typed);
+}
+
 async function findUser(usuario, senha){
+  const typed = normalize(usuario);
+
+  // Primeiro tenta pelo ID do documento. No seu Firebase os usuários costumam estar
+  // como jessica, anizia, jadson etc. Isso evita ficar varrendo tudo sem necessidade.
+  try{
+    const direct = await getDoc(doc(db, "usuarios", typed));
+    if(direct.exists()){
+      const data = { id: direct.id, ...direct.data() };
+      if(data.ativo !== false && passwordMatches(data, senha)) return data;
+    }
+  }catch(err){
+    console.warn("Falha ao buscar usuário direto:", err);
+  }
+
+  // Fallback: lê a coleção e compara por usuario/login/nome/id.
   await loadCollection("usuarios");
-  return state.usuarios.find(u => normalize(u.usuario) === normalize(usuario) && String(u.senha || "").trim() === String(senha || "").trim() && u.ativo !== false);
+  return state.usuarios.find(u =>
+    u.ativo !== false &&
+    userMatches(u, u.id, usuario) &&
+    passwordMatches(u, senha)
+  );
 }
 
 function rememberLoad(){
@@ -107,53 +155,89 @@ function rememberSave(){
 
 $("#loginForm").addEventListener("submit", async (e)=>{
   e.preventDefault();
-  $("#loginMsg").textContent = "Validando acesso...";
+
+  const form = $("#loginForm");
+  const submitBtn = form?.querySelector('button[type="submit"]');
+  const msg = $("#loginMsg");
   const usuario = $("#usuario").value.trim();
   const senha = $("#senha").value.trim();
-  if(!usuario || !senha){ $("#loginMsg").textContent = "Preencha usuário e senha."; return; }
+
+  if(!usuario || !senha){
+    msg.textContent = "Preencha usuário e senha.";
+    return;
+  }
+
+  msg.textContent = "Validando acesso...";
+  if(submitBtn) submitBtn.disabled = true;
+
   try{
-    const u = await findUser(usuario, senha);
-    if(!u){ $("#loginMsg").textContent = "Usuário ou senha inválidos."; return; }
-    currentUser = u; currentUserId = u.id;
+    const u = await withTimeout(findUser(usuario, senha), 12000, "Tempo de conexão esgotado. Verifique a internet e tente novamente.");
+
+    if(!u){
+      msg.textContent = "Usuário ou senha inválidos.";
+      return;
+    }
+
+    currentUser = u;
+    currentUserId = u.id;
     rememberSave();
+
     $("#loginScreen").classList.add("hidden");
     $("#appScreen").classList.remove("hidden");
-    $("#userName").textContent = u.nome || u.usuario;
-    $("#userRole").textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor}`;
-    $("#userInitials").textContent = initial(u.nome || u.usuario);
+
+    $("#userName").textContent = u.nome || u.usuario || u.id;
+    $("#userRole").textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor || ""}`;
+    $("#userInitials").textContent = initial(u.nome || u.usuario || u.id);
+
     const sideName = document.querySelector("#sideUserName");
     const sideRole = document.querySelector("#sideUserRole");
     const sideInitials = document.querySelector("#sideInitials");
-    if (sideName) sideName.textContent = u.nome || u.usuario;
-    if (sideRole) sideRole.textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor}`;
-    if (sideInitials) sideInitials.textContent = initial(u.nome || u.usuario);
+    if (sideName) sideName.textContent = u.nome || u.usuario || u.id;
+    if (sideRole) sideRole.textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor || ""}`;
+    if (sideInitials) sideInitials.textContent = initial(u.nome || u.usuario || u.id);
+
     buildNav();
-    await loadAll();
+
+    // Mostra a tela imediatamente, sem deixar o login travado esperando todas as coleções.
     renderPage("inicio");
-    if(!u.senhaAlterada) openPasswordModal();
+    msg.textContent = "";
+
+    loadAll()
+      .then(() => renderPage("inicio"))
+      .catch((err) => {
+        console.warn("Falha ao carregar dados:", err);
+        showToast("Login feito, mas alguns dados não carregaram.");
+      });
+
+    if(!u.senhaAlterada){
+      setTimeout(() => openPasswordModal(), 350);
+    }
+
   }catch(err){
     console.error(err);
-    $("#loginMsg").textContent = "Erro ao conectar no Firebase.";
+    msg.textContent = err?.message || "Erro ao conectar no Firebase.";
+  }finally{
+    if(submitBtn) submitBtn.disabled = false;
   }
 });
 
-$("#togglePassword").addEventListener("click", ()=>{
+document.querySelector("#togglePassword")?.addEventListener("click", ()=>{
   const input = $("#senha");
   input.type = input.type === "password" ? "text" : "password";
 });
-$("#forgotPasswordBtn").addEventListener("click", ()=> openForgotModal());
-$("#logoutBtn").addEventListener("click", ()=>{
+document.querySelector("#forgotPasswordBtn")?.addEventListener("click", ()=> openForgotModal());
+document.querySelector("#logoutBtn")?.addEventListener("click", ()=>{
   currentUser = null; currentUserId = null;
   $("#senha").value = "";
   $("#appScreen").classList.add("hidden");
   $("#loginScreen").classList.remove("hidden");
 });
-$("#refreshBtn").addEventListener("click", async ()=>{
+document.querySelector("#refreshBtn")?.addEventListener("click", async ()=>{
   await loadAll();
   renderPage(currentPage);
   showToast("Dados atualizados.");
 });
-$("#quickAvisoBtn").addEventListener("click", ()=> openAvisoModal());
+document.querySelector("#quickAvisoBtn")?.addEventListener("click", ()=> openAvisoModal());
 
 function buildNav(){
   $("#sideNav").innerHTML = navItems.map(([key,icon,label]) =>
@@ -531,7 +615,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-entrada-fachada-v15")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-entrada-fachada-v16")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;

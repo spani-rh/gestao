@@ -1,10 +1,10 @@
-const CACHE_NAME = "spani-rh-entrada-fachada-v15";
+const CACHE_NAME = "spani-rh-entrada-fachada-v16";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=15",
-  "./script.js?v=15",
-  "./manifest.json?v=15",
+  "./style.css?v=16",
+  "./script.js?v=16",
+  "./manifest.json?v=16",
   "./assets/spani-logo-oficial.png",
   "./assets/fachada-spani-login.png"
 ];
@@ -28,10 +28,12 @@ self.addEventListener("fetch", event => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
   const core = request.mode === "navigate" || ["document","script","style","manifest"].includes(request.destination);
   if (core) {
     event.respondWith(fetch(request, { cache: "no-store" }).catch(() => caches.match("./index.html")));
     return;
   }
+
   event.respondWith(caches.match(request).then(cached => cached || fetch(request)));
 });
