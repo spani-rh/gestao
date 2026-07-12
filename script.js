@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "12.0.0";
+const APP_VERSION = "13.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -33,14 +33,14 @@ let state = {
 const collections = ["usuarios","setores","colaboradores","escalas","avisosRH","bancoHoras","planosAcao","eventos","ferias","faltas","atestados"];
 
 const navItems = [
-  ["inicio","🏠","Início"],
+  ["inicio","⌂","Início"],
   ["colaboradores","👥","Colaboradores"],
-  ["escalas","📅","Escalas"],
-  ["avisosRH","🔔","Avisos RH"],
-  ["bancoHoras","⏱️","Banco de Horas"],
-  ["planosAcao","✅","Planos de Ação"],
-  ["eventos","🎉","Eventos"],
-  ["ferias","🌴","Férias"]
+  ["escalas","▣","Escalas"],
+  ["avisosRH","☏","Avisos RH"],
+  ["bancoHoras","◷","Banco de Horas"],
+  ["planosAcao","✓","Planos de Ação"],
+  ["eventos","✧","Eventos"],
+  ["ferias","☘","Férias"]
 ];
 
 function showToast(msg){
@@ -121,6 +121,12 @@ $("#loginForm").addEventListener("submit", async (e)=>{
     $("#userName").textContent = u.nome || u.usuario;
     $("#userRole").textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor}`;
     $("#userInitials").textContent = initial(u.nome || u.usuario);
+    const sideName = document.querySelector("#sideUserName");
+    const sideRole = document.querySelector("#sideUserRole");
+    const sideInitials = document.querySelector("#sideInitials");
+    if (sideName) sideName.textContent = u.nome || u.usuario;
+    if (sideRole) sideRole.textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor}`;
+    if (sideInitials) sideInitials.textContent = initial(u.nome || u.usuario);
     buildNav();
     await loadAll();
     renderPage("inicio");
@@ -188,18 +194,44 @@ function renderInicio(){
     return /^\d{4}-\d{2}-\d{2}$/.test(d) && Number(d.slice(5,7)) === monthNow();
   });
   const pendentes = avisos.filter(a => (a.status || "pendente") === "pendente");
+  const nome = currentUser?.nome || currentUser?.usuario || "Usuário";
 
-  setTitle(isAdmin() ? "Resumo Geral" : "Minha Área", isAdmin() ? "Visão geral da Gestão de Pessoas" : `Resumo do setor ${currentUser.setorNome || currentUser.setor}`);
+  setTitle("Início", "");
   content.innerHTML = `
+    <section class="hero">
+      <div class="hello">
+        <small>Olá,</small>
+        <h2>${fmt(nome)} 👋</h2>
+        <p>${isAdmin() ? "Veja o resumo geral da Gestão RH." : `Veja o resumo do setor ${fmt(currentUser.setorNome || currentUser.setor)}.`}</p>
+      </div>
+      <button class="add-button" id="homeAddBtn">＋ Adicionar</button>
+    </section>
+
+    <section class="banner-card">
+      <div>
+        <h3>🎂 Aniversariantes do mês</h3>
+        <p>Colaboradores com aniversário neste mês — para aparecer aqui, cadastre a data de nascimento no colaborador.</p>
+        <p style="margin-top:16px">${aniversariantes.length ? aniversariantes.map(a=>fmt(a.nome)).join(", ") : "Nenhum aniversariante cadastrado para este mês."}</p>
+      </div>
+      <span class="pill-count">${aniversariantes.length} aniversariante(s)</span>
+    </section>
+
     <section class="cards">
-      ${card("👥","Colaboradores ativos", colaboradores.length, "Somente dados cadastrados no Firebase")}
-      ${card("🎂","Aniversariantes do mês", aniversariantes.length, "Usa dataNascimento quando existir")}
-      ${card("🌴","Férias programadas", ferias.length, "Registros ativos")}
-      ${card("🔔","Avisos pendentes", pendentes.length, "Atestado, banco de horas e faltas")}
-      ${card("📅","Escalas", escalas.length, "Escalas registradas")}
-      ${card("⏱️","Banco de horas", banco.length, "Registros de saldo")}
-      ${card("✅","Planos de ação", planos.length, "Planos cadastrados")}
-      ${card("🎉","Eventos", eventos.length, "Eventos cadastrados")}
+      <article class="card">
+        <div class="icon">▣</div>
+        <h3>Escalas</h3>
+        <p>${escalas.length ? `${escalas.length} escala(s) cadastrada(s).` : "Nenhuma escala cadastrada."}</p>
+      </article>
+      <article class="card">
+        <div class="icon">☏</div>
+        <h3>Avisos RH</h3>
+        <p>${pendentes.length ? `${pendentes.length} aviso(s) pendente(s) para o RH.` : "Nenhum aviso pendente."}</p>
+      </article>
+      <article class="card">
+        <div class="icon">◷</div>
+        <h3>Banco de Horas</h3>
+        <p>${banco.length ? `${banco.length} registro(s) de banco de horas.` : "Nenhum banco de horas cadastrado."}</p>
+      </article>
     </section>
 
     <section class="grid-two">
@@ -211,9 +243,9 @@ function renderInicio(){
         ${tableAvisos(avisos.slice(0,6))}
       </div>
       <div class="panel">
-        <div class="panel-header"><h2>Estrutura do acesso</h2></div>
+        <div class="panel-header"><h2>Resumo do acesso</h2></div>
         <div class="kv">
-          <div><strong>${isAdmin() ? "Total" : (currentUser.setorNome || currentUser.setor)}</strong><span>Acesso atual</span></div>
+          <div><strong>${isAdmin() ? "Total" : fmt(currentUser.setorNome || currentUser.setor)}</strong><span>Acesso atual</span></div>
           <div><strong>${isAdmin() ? "Admin" : "Líder"}</strong><span>Perfil</span></div>
           <div><strong>${state.setores.filter(s=>s.ativo!==false).length}</strong><span>Setores cadastrados</span></div>
           <div><strong>${state.usuarios.filter(u=>u.ativo!==false).length}</strong><span>Usuários ativos</span></div>
@@ -221,6 +253,10 @@ function renderInicio(){
       </div>
     </section>`;
   $("#newAvisoHome").addEventListener("click", openAvisoModal);
+  $("#homeAddBtn").addEventListener("click", () => {
+    if (currentPage === "inicio") openAvisoModal();
+    else renderPage(currentPage);
+  });
 }
 
 function empty(text){ return `<div class="empty">${text}</div>`; }
@@ -495,7 +531,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-betesda-v12")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-betesda-v13")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;

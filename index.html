@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spani Atacadista · Gestão RH</title>
-  <meta name="theme-color" content="#101827" />
+  <meta name="theme-color" content="#f6f7fb" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="manifest" href="manifest.json?v=12" />
-  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="manifest" href="manifest.json?v=13" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen">
@@ -20,10 +20,10 @@
 
       <form id="loginForm" autocomplete="off" novalidate>
         <label>Usuário</label>
-        <div class="field"><span>👤</span><input id="usuario" name="usuario_v12" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required /></div>
+        <div class="field"><span>👤</span><input id="usuario" name="usuario_v13" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required /></div>
 
         <label>Senha</label>
-        <div class="field"><span>🔒</span><input id="senha" name="senha_v12" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required /><button id="togglePassword" type="button">👁️</button></div>
+        <div class="field"><span>🔒</span><input id="senha" name="senha_v13" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required /><button id="togglePassword" type="button">👁️</button></div>
 
         <div class="login-row">
           <label class="remember"><input id="rememberMe" type="checkbox" checked /> Lembrar usuário</label>
@@ -40,25 +40,47 @@
     <aside class="sidebar">
       <div class="brand">
         <img src="assets/logo.svg" alt="Spani Atacadista" />
-        <strong>Gestão RH</strong>
+        <div>
+          <strong>Spani Atacadista</strong>
+          <span>Gestão RH</span>
+        </div>
       </div>
       <nav id="sideNav"></nav>
-      <button id="logoutBtn" class="logout">Sair</button>
+
+      <div class="sidebar-user">
+        <div class="avatar-small" id="sideInitials">RH</div>
+        <div>
+          <strong id="sideUserName">Usuário</strong>
+          <span id="sideUserRole">Perfil</span>
+        </div>
+        <button id="sideEditBtn" type="button" title="Perfil">✎</button>
+      </div>
+      <button id="logoutBtn" class="logout">↪</button>
     </aside>
 
     <section class="main">
       <header class="topbar">
-        <button id="menuBtn" class="menu-btn">☰</button>
-        <div>
-          <h1 id="pageTitle">Início</h1>
-          <p id="pageSubtitle">Resumo do sistema</p>
+        <div class="top-left">
+          <button id="menuBtn" class="menu-btn">☰</button>
+          <button class="collapse-btn" type="button">▣</button>
+          <div>
+            <h1 id="pageTitle">Início</h1>
+            <p id="pageSubtitle">Resumo do sistema</p>
+          </div>
         </div>
+
         <div class="top-actions">
-          <button id="refreshBtn" class="outline-btn">Atualizar</button>
-          <button id="quickAvisoBtn" class="primary-small">Avisar RH</button>
-          <div class="user-box">
+          <div class="search-box">🔍 <input id="searchInput" type="search" placeholder="Pesquisar..." /></div>
+          <button id="refreshBtn" class="icon-top" title="Atualizar">↻</button>
+          <button class="icon-top" type="button" title="Notificações">🔔<small>0</small></button>
+          <button class="icon-top" type="button" title="Tema">☾</button>
+          <div class="user-pill">
             <span id="userInitials">RH</span>
-            <div><strong id="userName">Usuário</strong><small id="userRole">Perfil</small></div>
+            <div>
+              <strong id="userName">Usuário</strong>
+              <small id="userRole">Perfil</small>
+            </div>
+            <b>⌄</b>
           </div>
         </div>
       </header>
@@ -76,6 +98,6 @@
   </section>
 
   <div id="toast" class="toast hidden"></div>
-  <script type="module" src="script.js?v=12"></script>
+  <script type="module" src="script.js?v=13"></script>
 </body>
 </html>
