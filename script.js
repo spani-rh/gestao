@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "16.0.0";
+const APP_VERSION = "17.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -85,10 +85,23 @@ async function loadAll(){
 }
 
 
-function withTimeout(promise, ms, label){
+const USUARIOS_FALLBACK = [
+  { id:"anizia", usuario:"anizia", senha:"4827", nome:"Anizia", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
+  { id:"jadson", usuario:"jadson", senha:"7394", nome:"Jadson", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
+  { id:"jose_mathias", usuario:"jose_mathias", senha:"9158", nome:"José Mathias", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
+  { id:"jessica", usuario:"jessica", senha:"2649", nome:"Jessica", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
+  { id:"andre", usuario:"andre", senha:"6382", nome:"André", perfil:"lider", acessoTotal:false, setor:"acougue", setorNome:"Açougue", ativo:true, senhaAlterada:true },
+  { id:"jacqueline", usuario:"jacqueline", senha:"5073", nome:"Jacqueline", perfil:"lider", acessoTotal:false, setor:"pereciveis", setorNome:"Perecíveis", ativo:true, senhaAlterada:true },
+  { id:"heidi", usuario:"heidi", senha:"8461", nome:"Heidi", perfil:"lider", acessoTotal:false, setor:"flv", setorNome:"FLV", ativo:true, senhaAlterada:true },
+  { id:"patricia", usuario:"patricia", senha:"1937", nome:"Patrícia", perfil:"lider", acessoTotal:false, setor:"mercearia", setorNome:"Mercearia", ativo:true, senhaAlterada:true },
+  { id:"josival", usuario:"josival", senha:"7526", nome:"Josival", perfil:"lider", acessoTotal:false, setor:"prevencao", setorNome:"Prevenção", ativo:true, senhaAlterada:true },
+  { id:"jose_arimateia", usuario:"jose_arimateia", senha:"4195", nome:"José de Arimateia", perfil:"lider", acessoTotal:false, setor:"recebimento", setorNome:"Recebimento", ativo:true, senhaAlterada:true }
+];
+
+function withTimeout(promise, ms, message){
   let timer;
   const timeout = new Promise((_, reject) => {
-    timer = setTimeout(() => reject(new Error(label || "Tempo de conexão esgotado.")), ms);
+    timer = setTimeout(() => reject(new Error(message || "Tempo esgotado.")), ms);
   });
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
@@ -101,7 +114,7 @@ function passwordMatches(user, senha){
 
 function userMatches(user, id, usuario){
   const typed = normalize(usuario);
-  const fields = [
+  return [
     id,
     user?.usuario,
     user?.login,
@@ -109,32 +122,42 @@ function userMatches(user, id, usuario){
     user?.user,
     user?.email,
     user?.nome
-  ];
-  return fields.some(v => normalize(v) === typed);
+  ].some(v => normalize(v) === typed);
+}
+
+function fallbackUser(usuario, senha){
+  return USUARIOS_FALLBACK.find(u => userMatches(u, u.id, usuario) && passwordMatches(u, senha)) || null;
 }
 
 async function findUser(usuario, senha){
   const typed = normalize(usuario);
 
-  // Primeiro tenta pelo ID do documento. No seu Firebase os usuários costumam estar
-  // como jessica, anizia, jadson etc. Isso evita ficar varrendo tudo sem necessidade.
+  // 1) Tentativa direta pelo ID do documento: usuarios/jessica, usuarios/anizia etc.
   try{
-    const direct = await getDoc(doc(db, "usuarios", typed));
+    const direct = await withTimeout(getDoc(doc(db, "usuarios", typed)), 5000, "Firebase demorou para responder.");
     if(direct.exists()){
       const data = { id: direct.id, ...direct.data() };
       if(data.ativo !== false && passwordMatches(data, senha)) return data;
     }
   }catch(err){
-    console.warn("Falha ao buscar usuário direto:", err);
+    console.warn("Busca direta no Firebase falhou:", err);
   }
 
-  // Fallback: lê a coleção e compara por usuario/login/nome/id.
-  await loadCollection("usuarios");
-  return state.usuarios.find(u =>
-    u.ativo !== false &&
-    userMatches(u, u.id, usuario) &&
-    passwordMatches(u, senha)
-  );
+  // 2) Tentativa lendo a coleção usuarios.
+  try{
+    await withTimeout(loadCollection("usuarios"), 7000, "Firebase demorou para carregar usuários.");
+    const found = state.usuarios.find(u =>
+      u.ativo !== false &&
+      userMatches(u, u.id, usuario) &&
+      passwordMatches(u, senha)
+    );
+    if(found) return found;
+  }catch(err){
+    console.warn("Busca na coleção usuarios falhou:", err);
+  }
+
+  // 3) Fallback temporário para não travar o acesso se o Firebase falhar.
+  return fallbackUser(usuario, senha);
 }
 
 function rememberLoad(){
@@ -156,9 +179,9 @@ function rememberSave(){
 $("#loginForm").addEventListener("submit", async (e)=>{
   e.preventDefault();
 
+  const msg = $("#loginMsg");
   const form = $("#loginForm");
   const submitBtn = form?.querySelector('button[type="submit"]');
-  const msg = $("#loginMsg");
   const usuario = $("#usuario").value.trim();
   const senha = $("#senha").value.trim();
 
@@ -171,7 +194,7 @@ $("#loginForm").addEventListener("submit", async (e)=>{
   if(submitBtn) submitBtn.disabled = true;
 
   try{
-    const u = await withTimeout(findUser(usuario, senha), 12000, "Tempo de conexão esgotado. Verifique a internet e tente novamente.");
+    const u = await withTimeout(findUser(usuario, senha), 10000, "Tempo esgotado. Tente novamente.");
 
     if(!u){
       msg.textContent = "Usuário ou senha inválidos.";
@@ -179,43 +202,43 @@ $("#loginForm").addEventListener("submit", async (e)=>{
     }
 
     currentUser = u;
-    currentUserId = u.id;
+    currentUserId = u.id || normalize(u.usuario);
     rememberSave();
 
     $("#loginScreen").classList.add("hidden");
     $("#appScreen").classList.remove("hidden");
 
-    $("#userName").textContent = u.nome || u.usuario || u.id;
+    $("#userName").textContent = u.nome || u.usuario || u.id || "Usuário";
     $("#userRole").textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor || ""}`;
     $("#userInitials").textContent = initial(u.nome || u.usuario || u.id);
 
     const sideName = document.querySelector("#sideUserName");
     const sideRole = document.querySelector("#sideUserRole");
     const sideInitials = document.querySelector("#sideInitials");
-    if (sideName) sideName.textContent = u.nome || u.usuario || u.id;
+    if (sideName) sideName.textContent = u.nome || u.usuario || u.id || "Usuário";
     if (sideRole) sideRole.textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor || ""}`;
     if (sideInitials) sideInitials.textContent = initial(u.nome || u.usuario || u.id);
 
     buildNav();
 
-    // Mostra a tela imediatamente, sem deixar o login travado esperando todas as coleções.
+    // Entra imediatamente. Os dados do Firebase carregam depois.
     renderPage("inicio");
     msg.textContent = "";
 
     loadAll()
       .then(() => renderPage("inicio"))
       .catch((err) => {
-        console.warn("Falha ao carregar dados:", err);
-        showToast("Login feito, mas alguns dados não carregaram.");
+        console.warn("Dados não carregaram:", err);
+        showToast("Login feito. Alguns dados podem não ter carregado.");
       });
 
-    if(!u.senhaAlterada){
-      setTimeout(() => openPasswordModal(), 350);
+    if(!u.senhaAlterada && !String(currentUserId || "").startsWith("fallback")){
+      setTimeout(() => openPasswordModal(), 400);
     }
 
   }catch(err){
-    console.error(err);
-    msg.textContent = err?.message || "Erro ao conectar no Firebase.";
+    console.error("Erro no login:", err);
+    msg.textContent = err?.message || "Erro ao validar acesso.";
   }finally{
     if(submitBtn) submitBtn.disabled = false;
   }
@@ -615,7 +638,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-entrada-fachada-v16")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-entrada-fachada-v17")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;

@@ -1,10 +1,10 @@
-const CACHE_NAME = "spani-rh-entrada-fachada-v16";
+const CACHE_NAME = "spani-rh-entrada-fachada-v17";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=16",
-  "./script.js?v=16",
-  "./manifest.json?v=16",
+  "./style.css?v=17",
+  "./script.js?v=17",
+  "./manifest.json?v=17",
   "./assets/spani-logo-oficial.png",
   "./assets/fachada-spani-login.png"
 ];
