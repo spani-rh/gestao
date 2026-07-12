@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "13.0.0";
+const APP_VERSION = "14.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -301,7 +301,7 @@ function renderEscalas(){
 }
 
 function renderAvisos(){
-  const list = isAdmin() ? state.avisosRH.filter(x=>x.ativo!==false) : state.avisosRH.filter(x=>x.ativo!==false && x.enviadoPor === currentUser.usuario || x.setor === currentUser.setor);
+  const list = isAdmin() ? state.avisosRH.filter(x=>x.ativo!==false) : state.avisosRH.filter(x => x.ativo !== false && (x.enviadoPor === currentUser.usuario || x.setor === currentUser.setor));
   setTitle("Avisos RH", "Atestado, Banco de Horas e Faltas enviados para Jessica/RH");
   content.innerHTML = `
     <div class="panel">
@@ -531,7 +531,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-betesda-v13")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-profissional-v14")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;

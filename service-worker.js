@@ -1,5 +1,5 @@
-const CACHE_NAME = "spani-rh-betesda-v13";
-const ASSETS = ["./","./index.html","./style.css?v=13","./script.js?v=13","./manifest.json?v=13","./assets/logo.svg"];
+const CACHE_NAME = "spani-rh-profissional-v14";
+const ASSETS = ["./","./index.html","./style.css?v=14","./script.js?v=14","./manifest.json?v=14","./assets/logo.svg"];
 self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(ASSETS)).catch(()=>null));self.skipWaiting();});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.map(key=>key!==CACHE_NAME?caches.delete(key):null))));self.clients.claim();});
 self.addEventListener("message",event=>{if(event.data?.type==="SKIP_WAITING")self.skipWaiting();});

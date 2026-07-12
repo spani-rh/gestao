@@ -1,14 +1,15 @@
 Spani Atacadista - Gestão RH
-Versão v13 - visual mais próximo do Betesda
+Versão v14 - Design profissional
 
-Alterações principais:
-- Sidebar clara igual ao estilo Betesda.
-- Botão ativo roxo.
-- Topbar com pesquisa, notificações e usuário à direita.
-- Tela inicial com “Olá”, card de aniversariantes, cards limpos e painel de avisos.
-- Mantida a integração Firebase da versão funcional.
-- Sem dashboard em imagem falsa.
+Objetivo:
+- Design profissional, limpo e moderno.
+- Sem imagem falsa de dashboard.
 - Sem dados inventados.
+- Botões e formulários reais.
+- Firebase preservado.
+
+Coleções usadas:
+usuarios, setores, colaboradores, escalas, avisosRH, bancoHoras, planosAcao, eventos, ferias, faltas, atestados.
 
 Abrir:
-https://spani-rh.github.io/gestao/?v=13
+https://spani-rh.github.io/gestao/?v=14
