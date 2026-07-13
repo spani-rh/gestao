@@ -1,14 +1,14 @@
 Spani Atacadista - Gestão RH
-Versão v18 - Jessica/RH desbloqueada
+Versão v13 - visual mais próximo do Betesda
 
-Correção:
-- Jessica/RH agora entra imediatamente com:
-  usuário: jessica
-  senha: 2649 ou 7571
-- A validação da Jessica acontece antes de consultar o Firebase, para não travar.
-- Firebase continua carregando os dados depois da entrada.
-- Fundo da fachada mantido.
-- Cache atualizado para ?v=18.
+Alterações principais:
+- Sidebar clara igual ao estilo Betesda.
+- Botão ativo roxo.
+- Topbar com pesquisa, notificações e usuário à direita.
+- Tela inicial com “Olá”, card de aniversariantes, cards limpos e painel de avisos.
+- Mantida a integração Firebase da versão funcional.
+- Sem dashboard em imagem falsa.
+- Sem dados inventados.
 
 Abrir:
-https://spani-rh.github.io/gestao/?v=18
+https://spani-rh.github.io/gestao/?v=13

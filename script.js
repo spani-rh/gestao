@@ -1,11 +1,11 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
-  getFirestore, collection, getDocs, getDoc, addDoc, doc, updateDoc,
+  getFirestore, collection, getDocs, addDoc, doc, updateDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "18.0.0";
+const APP_VERSION = "13.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -84,98 +84,9 @@ async function loadAll(){
   await Promise.all(collections.map(loadCollection));
 }
 
-
-const USUARIOS_FALLBACK = [
-  // Jessica/RH principal: aceita a senha padrão e a senha atual para destravar o acesso.
-  { id:"jessica", usuario:"jessica", senha:"2649", nome:"Jessica", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
-  { id:"jessica", usuario:"jessica", senha:"7571", nome:"Jessica", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
-
-  { id:"anizia", usuario:"anizia", senha:"4827", nome:"Anizia", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
-  { id:"jadson", usuario:"jadson", senha:"7394", nome:"Jadson", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
-  { id:"jose_mathias", usuario:"jose_mathias", senha:"9158", nome:"José Mathias", perfil:"admin", acessoTotal:true, setor:"todos", setorNome:"Todos", ativo:true, senhaAlterada:true },
-  { id:"andre", usuario:"andre", senha:"6382", nome:"André", perfil:"lider", acessoTotal:false, setor:"acougue", setorNome:"Açougue", ativo:true, senhaAlterada:true },
-  { id:"jacqueline", usuario:"jacqueline", senha:"5073", nome:"Jacqueline", perfil:"lider", acessoTotal:false, setor:"pereciveis", setorNome:"Perecíveis", ativo:true, senhaAlterada:true },
-  { id:"heidi", usuario:"heidi", senha:"8461", nome:"Heidi", perfil:"lider", acessoTotal:false, setor:"flv", setorNome:"FLV", ativo:true, senhaAlterada:true },
-  { id:"patricia", usuario:"patricia", senha:"1937", nome:"Patrícia", perfil:"lider", acessoTotal:false, setor:"mercearia", setorNome:"Mercearia", ativo:true, senhaAlterada:true },
-  { id:"josival", usuario:"josival", senha:"7526", nome:"Josival", perfil:"lider", acessoTotal:false, setor:"prevencao", setorNome:"Prevenção", ativo:true, senhaAlterada:true },
-  { id:"jose_arimateia", usuario:"jose_arimateia", senha:"4195", nome:"José de Arimateia", perfil:"lider", acessoTotal:false, setor:"recebimento", setorNome:"Recebimento", ativo:true, senhaAlterada:true }
-];
-
-function withTimeout(promise, ms, message){
-  let timer;
-  const timeout = new Promise((_, reject) => {
-    timer = setTimeout(() => reject(new Error(message || "Tempo esgotado.")), ms);
-  });
-  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
-}
-
-function passwordMatches(user, senha){
-  const typed = String(senha || "").trim();
-  const saved = String(user?.senha ?? user?.password ?? user?.pin ?? "").trim();
-  return saved === typed;
-}
-
-function userMatches(user, id, usuario){
-  const typed = normalize(usuario);
-  return [
-    id,
-    user?.usuario,
-    user?.login,
-    user?.username,
-    user?.user,
-    user?.email,
-    user?.nome
-  ].some(v => normalize(v) === typed);
-}
-
-function fallbackUser(usuario, senha){
-  return USUARIOS_FALLBACK.find(u => userMatches(u, u.id, usuario) && passwordMatches(u, senha)) || null;
-}
-
 async function findUser(usuario, senha){
-  const typed = normalize(usuario);
-
-  // 1) Desbloqueio imediato: usuários essenciais locais, especialmente Jessica/RH.
-  // Isso impede o login de travar se o Firebase demorar ou se o documento dela estiver com diferença de campo.
-  const local = fallbackUser(usuario, senha);
-  if(local) return local;
-
-  // 2) Tentativa direta pelo ID exato digitado.
-  try{
-    const directExact = await withTimeout(getDoc(doc(db, "usuarios", String(usuario || "").trim())), 4500, "Firebase demorou para responder.");
-    if(directExact.exists()){
-      const data = { id: directExact.id, ...directExact.data() };
-      if(data.ativo !== false && passwordMatches(data, senha)) return data;
-    }
-  }catch(err){
-    console.warn("Busca direta exata falhou:", err);
-  }
-
-  // 3) Tentativa direta pelo ID em minúsculo.
-  try{
-    const directLower = await withTimeout(getDoc(doc(db, "usuarios", typed)), 4500, "Firebase demorou para responder.");
-    if(directLower.exists()){
-      const data = { id: directLower.id, ...directLower.data() };
-      if(data.ativo !== false && passwordMatches(data, senha)) return data;
-    }
-  }catch(err){
-    console.warn("Busca direta minúscula falhou:", err);
-  }
-
-  // 4) Tentativa lendo a coleção usuarios.
-  try{
-    await withTimeout(loadCollection("usuarios"), 6500, "Firebase demorou para carregar usuários.");
-    const found = state.usuarios.find(u =>
-      u.ativo !== false &&
-      userMatches(u, u.id, usuario) &&
-      passwordMatches(u, senha)
-    );
-    if(found) return found;
-  }catch(err){
-    console.warn("Busca na coleção usuarios falhou:", err);
-  }
-
-  return null;
+  await loadCollection("usuarios");
+  return state.usuarios.find(u => normalize(u.usuario) === normalize(usuario) && String(u.senha || "").trim() === String(senha || "").trim() && u.ativo !== false);
 }
 
 function rememberLoad(){
@@ -196,89 +107,53 @@ function rememberSave(){
 
 $("#loginForm").addEventListener("submit", async (e)=>{
   e.preventDefault();
-
-  const msg = $("#loginMsg");
-  const form = $("#loginForm");
-  const submitBtn = form?.querySelector('button[type="submit"]');
+  $("#loginMsg").textContent = "Validando acesso...";
   const usuario = $("#usuario").value.trim();
   const senha = $("#senha").value.trim();
-
-  if(!usuario || !senha){
-    msg.textContent = "Preencha usuário e senha.";
-    return;
-  }
-
-  msg.textContent = "Validando acesso...";
-  if(submitBtn) submitBtn.disabled = true;
-
+  if(!usuario || !senha){ $("#loginMsg").textContent = "Preencha usuário e senha."; return; }
   try{
-    const u = await withTimeout(findUser(usuario, senha), 10000, "Tempo esgotado. Tente novamente.");
-
-    if(!u){
-      msg.textContent = "Usuário ou senha inválidos.";
-      return;
-    }
-
-    currentUser = u;
-    currentUserId = u.id || normalize(u.usuario);
+    const u = await findUser(usuario, senha);
+    if(!u){ $("#loginMsg").textContent = "Usuário ou senha inválidos."; return; }
+    currentUser = u; currentUserId = u.id;
     rememberSave();
-
     $("#loginScreen").classList.add("hidden");
     $("#appScreen").classList.remove("hidden");
-
-    $("#userName").textContent = u.nome || u.usuario || u.id || "Usuário";
-    $("#userRole").textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor || ""}`;
-    $("#userInitials").textContent = initial(u.nome || u.usuario || u.id);
-
+    $("#userName").textContent = u.nome || u.usuario;
+    $("#userRole").textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor}`;
+    $("#userInitials").textContent = initial(u.nome || u.usuario);
     const sideName = document.querySelector("#sideUserName");
     const sideRole = document.querySelector("#sideUserRole");
     const sideInitials = document.querySelector("#sideInitials");
-    if (sideName) sideName.textContent = u.nome || u.usuario || u.id || "Usuário";
-    if (sideRole) sideRole.textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor || ""}`;
-    if (sideInitials) sideInitials.textContent = initial(u.nome || u.usuario || u.id);
-
+    if (sideName) sideName.textContent = u.nome || u.usuario;
+    if (sideRole) sideRole.textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor}`;
+    if (sideInitials) sideInitials.textContent = initial(u.nome || u.usuario);
     buildNav();
-
-    // Entra imediatamente. Os dados do Firebase carregam depois.
+    await loadAll();
     renderPage("inicio");
-    msg.textContent = "";
-
-    loadAll()
-      .then(() => renderPage("inicio"))
-      .catch((err) => {
-        console.warn("Dados não carregaram:", err);
-        showToast("Login feito. Alguns dados podem não ter carregado.");
-      });
-
-    if(!u.senhaAlterada && u.id !== "jessica"){
-      setTimeout(() => openPasswordModal(), 400);
-    }
-
+    if(!u.senhaAlterada) openPasswordModal();
   }catch(err){
-    console.error("Erro no login:", err);
-    msg.textContent = err?.message || "Erro ao validar acesso.";
-  }finally{
-    if(submitBtn) submitBtn.disabled = false;
+    console.error(err);
+    $("#loginMsg").textContent = "Erro ao conectar no Firebase.";
   }
 });
 
-document.querySelector("#togglePassword")?.addEventListener("click", ()=>{
+$("#togglePassword").addEventListener("click", ()=>{
   const input = $("#senha");
   input.type = input.type === "password" ? "text" : "password";
 });
-document.querySelector("#forgotPasswordBtn")?.addEventListener("click", ()=> openForgotModal());
-document.querySelector("#logoutBtn")?.addEventListener("click", ()=>{
+$("#forgotPasswordBtn").addEventListener("click", ()=> openForgotModal());
+$("#logoutBtn").addEventListener("click", ()=>{
   currentUser = null; currentUserId = null;
   $("#senha").value = "";
   $("#appScreen").classList.add("hidden");
   $("#loginScreen").classList.remove("hidden");
 });
-document.querySelector("#refreshBtn")?.addEventListener("click", async ()=>{
+$("#refreshBtn").addEventListener("click", async ()=>{
   await loadAll();
   renderPage(currentPage);
   showToast("Dados atualizados.");
 });
-document.querySelector("#quickAvisoBtn")?.addEventListener("click", ()=> openAvisoModal());
+$("#quickAvisoBtn").addEventListener("click", ()=> openAvisoModal());
 
 function buildNav(){
   $("#sideNav").innerHTML = navItems.map(([key,icon,label]) =>
@@ -426,7 +301,7 @@ function renderEscalas(){
 }
 
 function renderAvisos(){
-  const list = isAdmin() ? state.avisosRH.filter(x=>x.ativo!==false) : state.avisosRH.filter(x => x.ativo !== false && (x.enviadoPor === currentUser.usuario || x.setor === currentUser.setor));
+  const list = isAdmin() ? state.avisosRH.filter(x=>x.ativo!==false) : state.avisosRH.filter(x=>x.ativo!==false && x.enviadoPor === currentUser.usuario || x.setor === currentUser.setor);
   setTitle("Avisos RH", "Atestado, Banco de Horas e Faltas enviados para Jessica/RH");
   content.innerHTML = `
     <div class="panel">
@@ -656,7 +531,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-jessica-v18")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-betesda-v13")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;

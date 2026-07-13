@@ -4,49 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spani Atacadista · Gestão RH</title>
-  <meta name="theme-color" content="#07111f" />
+  <meta name="theme-color" content="#f6f7fb" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="manifest" href="manifest.json?v=18" />
-  <link rel="stylesheet" href="style.css?v=18" />
+  <link rel="manifest" href="manifest.json?v=13" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen">
-    <div class="login-overlay"></div>
+    <div class="login-card">
+      <img src="assets/logo.svg" alt="Spani Atacadista" class="login-logo" />
+      <h1>Gestão RH</h1>
+      <p>Acesso interno para líderes e administradores.</p>
 
-    <div class="login-shell">
-      <section class="login-hero">
-        <img src="assets/spani-logo-oficial.png" alt="Spani Atacadista" class="login-logo" />
-        <h1>Gestão RH</h1>
-        <p>Acesso interno para líderes e administradores.</p>
-      </section>
-
-      <form id="loginForm" class="login-card" autocomplete="off" novalidate>
-        <div class="login-card-title">
-          <h2>Acesse sua conta</h2>
-          <span>Sistema interno</span>
-        </div>
-
+      <form id="loginForm" autocomplete="off" novalidate>
         <label>Usuário</label>
-        <div class="field">
-          <span>👤</span>
-          <input id="usuario" name="usuario_v18" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
-        </div>
+        <div class="field"><span>👤</span><input id="usuario" name="usuario_v13" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required /></div>
 
         <label>Senha</label>
-        <div class="field">
-          <span>🔒</span>
-          <input id="senha" name="senha_v18" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required />
-          <button id="togglePassword" type="button" aria-label="Mostrar ou ocultar senha">👁️</button>
-        </div>
+        <div class="field"><span>🔒</span><input id="senha" name="senha_v13" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required /><button id="togglePassword" type="button">👁️</button></div>
 
         <div class="login-row">
-          <label class="remember">
-            <input id="rememberMe" type="checkbox" checked />
-            <span>Lembrar meu acesso</span>
-          </label>
-          <button id="forgotPasswordBtn" type="button" class="link-btn">Esqueceu sua senha?</button>
+          <label class="remember"><input id="rememberMe" type="checkbox" checked /> Lembrar usuário</label>
+          <button id="forgotPasswordBtn" type="button" class="link-btn">Esqueceu?</button>
         </div>
 
         <button class="primary-btn" type="submit">Entrar</button>
@@ -59,9 +40,11 @@
     <aside class="sidebar">
       <div class="brand">
         <img src="assets/logo.svg" alt="Spani Atacadista" />
-        <span>Gestão RH</span>
+        <div>
+          <strong>Spani Atacadista</strong>
+          <span>Gestão RH</span>
+        </div>
       </div>
-
       <nav id="sideNav"></nav>
 
       <div class="sidebar-user">
@@ -70,15 +53,16 @@
           <strong id="sideUserName">Usuário</strong>
           <span id="sideUserRole">Perfil</span>
         </div>
+        <button id="sideEditBtn" type="button" title="Perfil">✎</button>
       </div>
-
-      <button id="logoutBtn" class="logout">Sair</button>
+      <button id="logoutBtn" class="logout">↪</button>
     </aside>
 
     <section class="main">
       <header class="topbar">
         <div class="top-left">
           <button id="menuBtn" class="menu-btn">☰</button>
+          <button class="collapse-btn" type="button">▣</button>
           <div>
             <h1 id="pageTitle">Início</h1>
             <p id="pageSubtitle">Resumo do sistema</p>
@@ -88,14 +72,15 @@
         <div class="top-actions">
           <div class="search-box">🔍 <input id="searchInput" type="search" placeholder="Pesquisar..." /></div>
           <button id="refreshBtn" class="icon-top" title="Atualizar">↻</button>
-          <button id="quickAvisoBtn" class="primary-small">Avisar RH</button>
-
+          <button class="icon-top" type="button" title="Notificações">🔔<small>0</small></button>
+          <button class="icon-top" type="button" title="Tema">☾</button>
           <div class="user-pill">
             <span id="userInitials">RH</span>
             <div>
               <strong id="userName">Usuário</strong>
               <small id="userRole">Perfil</small>
             </div>
+            <b>⌄</b>
           </div>
         </div>
       </header>
@@ -113,6 +98,6 @@
   </section>
 
   <div id="toast" class="toast hidden"></div>
-  <script type="module" src="script.js?v=18"></script>
+  <script type="module" src="script.js?v=13"></script>
 </body>
 </html>
