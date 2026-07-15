@@ -1,18 +1,12 @@
 Spani Atacadista - Gestão RH
-Versão v23 - Tema realmente funcionando
+Versão v24 - Dark/White direto
 
-Correção principal:
-- O botão de tema deixou de ser enfeite.
-- Agora ele alterna de verdade entre tema escuro e tema claro.
-- O ícone muda entre 🌙 e ☀️.
-- A preferência fica salva no navegador.
-- O sistema mostra aviso visual ao trocar o tema.
-
-Preservado:
-- Entrada validada.
-- Login da Jessica.
-- Dashboard, Escalas, Banco de Horas.
-- Edição/apagar da v22.
+Correção:
+- O botão Dark/White agora tem onclick direto no HTML.
+- Não depende do script principal, Firebase ou login.
+- Alterna data-theme no HTML/body.
+- Muda ícone entre 🌙 e ☀️.
+- Salva preferência no navegador.
 
 Abrir:
-https://spani-rh.github.io/gestao/?v=23
+https://spani-rh.github.io/gestao/?v=24
