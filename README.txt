@@ -1,14 +1,12 @@
 Spani Atacadista - Gestão RH
-Versão v13 - visual mais próximo do Betesda
+Versão v19 - Base v13 com entrada nova
 
-Alterações principais:
-- Sidebar clara igual ao estilo Betesda.
-- Botão ativo roxo.
-- Topbar com pesquisa, notificações e usuário à direita.
-- Tela inicial com “Olá”, card de aniversariantes, cards limpos e painel de avisos.
-- Mantida a integração Firebase da versão funcional.
-- Sem dashboard em imagem falsa.
-- Sem dados inventados.
+Importante:
+- Esta versão voltou para a base Spani_RH_BetesdaStyle_v13, que foi a última em que o login da Jessica funcionou.
+- A lógica de login da v13 foi preservada.
+- A entrada foi alterada para usar a fachada limpa enviada pelo usuário.
+- Logo oficial aplicado na tela de entrada.
+- Cache atualizado para ?v=19.
 
 Abrir:
-https://spani-rh.github.io/gestao/?v=13
+https://spani-rh.github.io/gestao/?v=19
