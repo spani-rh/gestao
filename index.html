@@ -8,8 +8,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="manifest" href="manifest.json?v=22" />
-  <link rel="stylesheet" href="style.css?v=22" />
+  <link rel="manifest" href="manifest.json?v=23" />
+  <link rel="stylesheet" href="style.css?v=23" />
 </head>
 <body>
   <section id="loginScreen" class="login-screen login-fachada">
@@ -31,13 +31,13 @@
         <label>Usuário</label>
         <div class="field">
           <span>👤</span>
-          <input id="usuario" name="usuario_v22" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
+          <input id="usuario" name="usuario_v23" type="text" placeholder="Digite seu usuário" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" required />
         </div>
 
         <label>Senha</label>
         <div class="field">
           <span>🔒</span>
-          <input id="senha" name="senha_v22" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required />
+          <input id="senha" name="senha_v23" type="password" placeholder="Digite sua senha" maxlength="4" inputmode="numeric" autocomplete="off" required />
           <button id="togglePassword" type="button" aria-label="Mostrar ou ocultar senha">👁️</button>
         </div>
 
@@ -92,7 +92,7 @@
           <div class="search-box">🔍 <input id="searchInput" type="search" placeholder="Pesquisar..." /></div>
           <button id="refreshBtn" class="icon-top" title="Atualizar">↻</button>
           <button class="icon-top" type="button" title="Notificações">🔔<small>0</small></button>
-          <button id="themeToggleBtn" class="icon-top" type="button" title="Alternar tema">☾</button>
+          <button id="themeToggleBtn" class="icon-top theme-toggle-real" type="button" title="Alternar tema" aria-label="Alternar tema">🌙</button>
           <div class="user-pill">
             <span id="userInitials">RH</span>
             <div>
@@ -117,6 +117,6 @@
   </section>
 
   <div id="toast" class="toast hidden"></div>
-  <script type="module" src="script.js?v=22"></script>
+  <script type="module" src="script.js?v=23"></script>
 </body>
 </html>

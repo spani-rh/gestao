@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "22.0.0";
+const APP_VERSION = "23.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -896,7 +896,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-tema-crud-v22")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-tema-funcionando-v23")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;
@@ -925,16 +925,39 @@ document.addEventListener("click", (event) => {
 
 /* ===== v22: tema claro/escuro e edição/exclusão de registros ===== */
 function applyThemeV22(theme){
-  document.body.classList.toggle("light-theme", theme === "light");
-  localStorage.setItem("spaniTheme", theme);
+  const selected = theme === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = selected;
+  document.body.dataset.theme = selected;
+  document.body.classList.toggle("light-theme", selected === "light");
+  document.body.classList.toggle("dark-theme", selected === "dark");
+  localStorage.setItem("spaniTheme", selected);
+
   const btn = document.querySelector("#themeToggleBtn");
-  if(btn) btn.textContent = theme === "light" ? "☀️" : "☾";
+  if(btn){
+    btn.textContent = selected === "light" ? "☀️" : "🌙";
+    btn.title = selected === "light" ? "Tema claro ativo — clique para escuro" : "Tema escuro ativo — clique para claro";
+    btn.setAttribute("aria-label", btn.title);
+    btn.classList.toggle("active-light", selected === "light");
+    btn.classList.toggle("active-dark", selected === "dark");
+  }
 }
+
+function toggleThemeV22(){
+  const current = document.body.classList.contains("light-theme") ? "light" : "dark";
+  applyThemeV22(current === "light" ? "dark" : "light");
+  showToast(current === "light" ? "Tema escuro ativado." : "Tema claro ativado.");
+}
+
 function initThemeV22(){
+  const btn = document.querySelector("#themeToggleBtn");
   applyThemeV22(localStorage.getItem("spaniTheme") || "dark");
-  document.querySelector("#themeToggleBtn")?.addEventListener("click", () => {
-    applyThemeV22(document.body.classList.contains("light-theme") ? "dark" : "light");
-  });
+  if(btn){
+    btn.onclick = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleThemeV22();
+    };
+  }
 }
 
 function collectionForPageV22(page){
@@ -1136,3 +1159,5 @@ renderPage = function(page){
 
 initThemeV22();
 setTimeout(enhanceCrudV22, 0);
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initThemeV22); else initThemeV22();
