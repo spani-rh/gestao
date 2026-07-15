@@ -1,12 +1,14 @@
 Spani Atacadista - Gestão RH
-Versão v19 - Base v13 com entrada nova
+Versão v20 - Correção visual do login
 
-Importante:
-- Esta versão voltou para a base Spani_RH_BetesdaStyle_v13, que foi a última em que o login da Jessica funcionou.
-- A lógica de login da v13 foi preservada.
-- A entrada foi alterada para usar a fachada limpa enviada pelo usuário.
-- Logo oficial aplicado na tela de entrada.
-- Cache atualizado para ?v=19.
+Base:
+- Mantida a base v13, onde o login da Jessica funcionava.
+
+Correção:
+- Corrigido o problema em que a tela de entrada continuava aparecendo por cima do sistema após o login.
+- O erro era CSS: a classe da fachada usava display:grid!important e vencia a classe hidden.
+- Agora #loginScreen.hidden força display:none.
+- O texto "Validando acesso..." é limpo após entrar.
 
 Abrir:
-https://spani-rh.github.io/gestao/?v=19
+https://spani-rh.github.io/gestao/?v=20

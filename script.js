@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "19.0.0";
+const APP_VERSION = "20.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -117,7 +117,10 @@ $("#loginForm").addEventListener("submit", async (e)=>{
     currentUser = u; currentUserId = u.id;
     rememberSave();
     $("#loginScreen").classList.add("hidden");
+    $("#loginScreen").style.display = "none";
+    $("#loginMsg").textContent = "";
     $("#appScreen").classList.remove("hidden");
+    $("#appScreen").style.display = "";
     $("#userName").textContent = u.nome || u.usuario;
     $("#userRole").textContent = isAdmin() ? "Administrador" : `Líder · ${u.setorNome || u.setor}`;
     $("#userInitials").textContent = initial(u.nome || u.usuario);
@@ -146,6 +149,7 @@ $("#logoutBtn").addEventListener("click", ()=>{
   currentUser = null; currentUserId = null;
   $("#senha").value = "";
   $("#appScreen").classList.add("hidden");
+  $("#loginScreen").style.display = "";
   $("#loginScreen").classList.remove("hidden");
 });
 $("#refreshBtn").addEventListener("click", async ()=>{
@@ -531,7 +535,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-base-v13-login-v19")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-base-v13-login-v20")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;

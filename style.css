@@ -496,3 +496,14 @@ tr:last-child td{border-bottom:0}
     font-size:28px!important;
   }
 }
+
+
+/* v20 FIX: o login precisa sumir depois que entra.
+   A regra .login-fachada tinha display:grid!important e vencia .hidden. */
+.login-fachada.hidden,
+#loginScreen.hidden{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
