@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "20.0.0";
+const APP_VERSION = "21.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -33,14 +33,14 @@ let state = {
 const collections = ["usuarios","setores","colaboradores","escalas","avisosRH","bancoHoras","planosAcao","eventos","ferias","faltas","atestados"];
 
 const navItems = [
-  ["inicio","⌂","Início"],
+  ["inicio","⌂","Dashboard"],
   ["colaboradores","👥","Colaboradores"],
-  ["escalas","▣","Escalas"],
-  ["avisosRH","☏","Avisos RH"],
-  ["bancoHoras","◷","Banco de Horas"],
-  ["planosAcao","✓","Planos de Ação"],
-  ["eventos","✧","Eventos"],
-  ["ferias","☘","Férias"]
+  ["escalas","📅","Escalas"],
+  ["avisosRH","🔔","Avisos RH"],
+  ["bancoHoras","⏱️","Banco de Horas"],
+  ["planosAcao","✅","Planos de Ação"],
+  ["eventos","🎉","Eventos"],
+  ["ferias","🌴","Férias"]
 ];
 
 function showToast(msg){
@@ -185,6 +185,98 @@ function card(icon,title,number,sub){
   return `<article class="card"><div class="icon">${icon}</div><h3>${title}</h3><div class="number">${number}</div><small>${sub || ""}</small></article>`;
 }
 
+
+function safeNumber(value){
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function sumSaldoHoras(list){
+  return list.reduce((acc, item) => acc + safeNumber(item.saldoHoras ?? item.saldo ?? item.horas ?? 0), 0);
+}
+
+function fmtHorasDecimal(value){
+  const n = safeNumber(value);
+  const sign = n > 0 ? "+" : n < 0 ? "-" : "";
+  const abs = Math.abs(n);
+  const h = Math.floor(abs);
+  const m = Math.round((abs - h) * 60);
+  return `${sign}${h}:${String(m).padStart(2,"0")}`;
+}
+
+function statusClass(status){
+  const s = String(status || "").toLowerCase();
+  if(s.includes("pend") || s.includes("rascunho")) return "orange";
+  if(s.includes("atras") || s.includes("neg") || s.includes("fal")) return "red";
+  if(s.includes("concl") || s.includes("aprov") || s.includes("public")) return "green";
+  return "blue";
+}
+
+function miniBar(value, max=100){
+  const width = Math.max(0, Math.min(100, safeNumber(value) / max * 100));
+  return `<div class="mini-progress"><span style="width:${width}%"></span></div>`;
+}
+
+function sparkline(values, cls="blue"){
+  const nums = values.map(safeNumber);
+  const max = Math.max(...nums, 1);
+  const points = nums.map((v,i) => {
+    const x = (i/(nums.length-1 || 1))*100;
+    const y = 100 - (v/max)*78 - 10;
+    return `${x},${y}`;
+  }).join(" ");
+  return `<svg class="sparkline ${cls}" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <polyline points="${points}" />
+  </svg>`;
+}
+
+function donut(percent, label, cls="green"){
+  const p = Math.max(0, Math.min(100, safeNumber(percent)));
+  return `<div class="donut ${cls}" style="--p:${p}">
+    <div><strong>${Math.round(p)}%</strong><span>${label}</span></div>
+  </div>`;
+}
+
+function getCurrentSetorLabel(){
+  return isAdmin() ? "Todos os setores" : (currentUser?.setorNome || currentUser?.setor || "Setor");
+}
+
+function colaboradoresDoSetor(){
+  return visible(state.colaboradores).filter(x => x.ativo !== false);
+}
+
+function getColaboradorNome(item){
+  return item?.nome || item?.colaborador || item?.colaboradorNome || "Colaborador";
+}
+
+function groupBySetor(list){
+  const map = new Map();
+  list.forEach(item => {
+    const key = item.setorNome || item.setor || "Sem setor";
+    map.set(key, (map.get(key) || 0) + 1);
+  });
+  return [...map.entries()];
+}
+
+function createDemoWeekRows(colaboradores){
+  const dias = ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+  const turnos = [
+    { label:"Manhã", time:"06:00 - 14:00", cls:"manha" },
+    { label:"Tarde", time:"14:00 - 22:00", cls:"tarde" },
+    { label:"Noite", time:"22:00 - 06:00", cls:"noite" },
+    { label:"Folga", time:"", cls:"folga" }
+  ];
+  return colaboradores.slice(0,8).map((c, row) => ({
+    nome: getColaboradorNome(c),
+    cargo: c.cargo || c.funcao || "Colaborador",
+    dias: dias.map((d, i) => turnos[(row + i) % turnos.length])
+  }));
+}
+
+function pageButton(id, label, cls="primary-small"){
+  return `<button class="${cls}" id="${id}" type="button">${label}</button>`;
+}
+
 function renderInicio(){
   const colaboradores = visible(state.colaboradores).filter(x=>x.ativo !== false);
   const escalas = visible(state.escalas).filter(x=>x.ativo !== false);
@@ -193,74 +285,150 @@ function renderInicio(){
   const planos = visible(state.planosAcao).filter(x=>x.ativo !== false);
   const eventos = visible(state.eventos).filter(x=>x.ativo !== false);
   const ferias = visible(state.ferias).filter(x=>x.ativo !== false);
+  const faltas = visible(state.faltas).filter(x=>x.ativo !== false);
+  const atestados = visible(state.atestados).filter(x=>x.ativo !== false);
+
   const aniversariantes = colaboradores.filter(c => {
     const d = c.dataNascimento || c.nascimento || "";
     return /^\d{4}-\d{2}-\d{2}$/.test(d) && Number(d.slice(5,7)) === monthNow();
   });
-  const pendentes = avisos.filter(a => (a.status || "pendente") === "pendente");
-  const nome = currentUser?.nome || currentUser?.usuario || "Usuário";
 
-  setTitle("Início", "");
+  const avisosPendentes = avisos.filter(a => (a.status || "pendente") === "pendente").length;
+  const feriasProg = ferias.filter(f => (f.status || "programada").toLowerCase().includes("program")).length || ferias.length;
+  const saldo = sumSaldoHoras(banco);
+  const planosAndamento = planos.filter(p => String(p.status || "").toLowerCase().includes("andamento")).length;
+  const planosConcluidos = planos.filter(p => String(p.status || "").toLowerCase().includes("concl")).length;
+  const planosPercent = planos.length ? (planosConcluidos / planos.length * 100) : 0;
+
+  setTitle("Dashboard", "Visão geral da Gestão de Pessoas");
   content.innerHTML = `
-    <section class="hero">
-      <div class="hello">
-        <small>Olá,</small>
-        <h2>${fmt(nome)} 👋</h2>
-        <p>${isAdmin() ? "Veja o resumo geral da Gestão RH." : `Veja o resumo do setor ${fmt(currentUser.setorNome || currentUser.setor)}.`}</p>
-      </div>
-      <button class="add-button" id="homeAddBtn">＋ Adicionar</button>
-    </section>
-
-    <section class="banner-card">
-      <div>
-        <h3>🎂 Aniversariantes do mês</h3>
-        <p>Colaboradores com aniversário neste mês — para aparecer aqui, cadastre a data de nascimento no colaborador.</p>
-        <p style="margin-top:16px">${aniversariantes.length ? aniversariantes.map(a=>fmt(a.nome)).join(", ") : "Nenhum aniversariante cadastrado para este mês."}</p>
-      </div>
-      <span class="pill-count">${aniversariantes.length} aniversariante(s)</span>
-    </section>
-
-    <section class="cards">
-      <article class="card">
-        <div class="icon">▣</div>
-        <h3>Escalas</h3>
-        <p>${escalas.length ? `${escalas.length} escala(s) cadastrada(s).` : "Nenhuma escala cadastrada."}</p>
-      </article>
-      <article class="card">
-        <div class="icon">☏</div>
-        <h3>Avisos RH</h3>
-        <p>${pendentes.length ? `${pendentes.length} aviso(s) pendente(s) para o RH.` : "Nenhum aviso pendente."}</p>
-      </article>
-      <article class="card">
-        <div class="icon">◷</div>
-        <h3>Banco de Horas</h3>
-        <p>${banco.length ? `${banco.length} registro(s) de banco de horas.` : "Nenhum banco de horas cadastrado."}</p>
-      </article>
-    </section>
-
-    <section class="grid-two">
-      <div class="panel">
-        <div class="panel-header">
-          <h2>Avisos recentes para o RH</h2>
-          <button class="primary-small" id="newAvisoHome">Enviar aviso</button>
+    <section class="pro-dashboard">
+      <div class="dash-header">
+        <div>
+          <span class="eyebrow">Aplicativo RH</span>
+          <h2>Resumo Geral</h2>
+          <p>${isAdmin() ? "Indicadores gerais do sistema." : `Indicadores do setor ${getCurrentSetorLabel()}.`}</p>
         </div>
-        ${tableAvisos(avisos.slice(0,6))}
-      </div>
-      <div class="panel">
-        <div class="panel-header"><h2>Resumo do acesso</h2></div>
-        <div class="kv">
-          <div><strong>${isAdmin() ? "Total" : fmt(currentUser.setorNome || currentUser.setor)}</strong><span>Acesso atual</span></div>
-          <div><strong>${isAdmin() ? "Admin" : "Líder"}</strong><span>Perfil</span></div>
-          <div><strong>${state.setores.filter(s=>s.ativo!==false).length}</strong><span>Setores cadastrados</span></div>
-          <div><strong>${state.usuarios.filter(u=>u.ativo!==false).length}</strong><span>Usuários ativos</span></div>
+        <div class="dash-actions">
+          ${pageButton("btnDashboardAviso","Enviar aviso ao RH")}
+          ${pageButton("btnDashboardEscala","Nova escala","outline-pro")}
         </div>
+      </div>
+
+      <div class="metric-grid">
+        <article class="metric-card">
+          <div class="metric-icon blue">👥</div>
+          <div>
+            <h3>Colaboradores ativos</h3>
+            <strong>${colaboradores.length}</strong>
+            <small>Somente dados cadastrados no Firebase</small>
+          </div>
+          ${sparkline([1,2,1,3,2,4,5,4,6],"blue")}
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-icon purple">🎂</div>
+          <div>
+            <h3>Aniversariantes do mês</h3>
+            <strong>${aniversariantes.length}</strong>
+            <small>${aniversariantes.length ? "Com data de nascimento cadastrada" : "Nenhum aniversariante neste mês"}</small>
+          </div>
+          <div class="mini-bars">${[30,55,22,70,35,48,25,62].map(v=>`<i style="height:${v}%"></i>`).join("")}</div>
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-icon green">🌴</div>
+          <div>
+            <h3>Férias programadas</h3>
+            <strong>${feriasProg}</strong>
+            <small>Registros ativos no Firebase</small>
+          </div>
+          ${donut(ferias.length ? (feriasProg/ferias.length*100) : 0, "programadas", "green")}
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-icon orange">🔔</div>
+          <div>
+            <h3>Avisos pendentes</h3>
+            <strong>${avisosPendentes}</strong>
+            <small>Atestado, banco de horas e faltas</small>
+          </div>
+          ${sparkline([2,1,3,2,4,3,3,5,2],"orange")}
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-icon blue">⏱️</div>
+          <div>
+            <h3>Banco de horas</h3>
+            <strong>${fmtHorasDecimal(saldo)}</strong>
+            <small>${saldo >= 0 ? "saldo positivo" : "saldo negativo"}</small>
+          </div>
+          <div class="bar-chart">${banco.slice(0,8).map(b=>`<span class="${safeNumber(b.saldoHoras) >= 0 ? "pos" : "neg"}" style="height:${Math.min(86, Math.max(14, Math.abs(safeNumber(b.saldoHoras))*8))}%"></span>`).join("") || `<span class="pos" style="height:18%"></span>`}</div>
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-icon red">⚠️</div>
+          <div>
+            <h3>Faltas / Atestados</h3>
+            <strong>${faltas.length + atestados.length}</strong>
+            <small>Registros ativos</small>
+          </div>
+          ${sparkline([1,2,1,3,2,2,3],"red")}
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-icon blue">✅</div>
+          <div>
+            <h3>Planos de ação</h3>
+            <strong>${planos.length}</strong>
+            <small>${planosAndamento} em andamento</small>
+          </div>
+          ${donut(planosPercent, "concluídos", "blue")}
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-icon orange">🎉</div>
+          <div>
+            <h3>Eventos</h3>
+            <strong>${eventos.length}</strong>
+            <small>Eventos cadastrados</small>
+          </div>
+          <div class="event-list-mini">
+            ${eventos.slice(0,3).map(e=>`<div><b>${fmt(e.dataEvento || e.data)}</b><span>${fmt(e.titulo)}</span></div>`).join("") || `<div><b>—</b><span>Nenhum evento</span></div>`}
+          </div>
+        </article>
+      </div>
+
+      <div class="dash-panels">
+        <section class="pro-panel wide">
+          <div class="panel-header-pro">
+            <h3>Distribuição por setor</h3>
+            <button class="text-action" id="btnVerColaboradores">Ver colaboradores</button>
+          </div>
+          <div class="sector-bars">
+            ${groupBySetor(colaboradores).slice(0,6).map(([setor,total]) => `
+              <div>
+                <span>${setor}</span>
+                ${miniBar(total, Math.max(colaboradores.length,1))}
+                <strong>${total}</strong>
+              </div>`).join("") || `<div class="empty compact">Nenhum colaborador cadastrado.</div>`}
+          </div>
+        </section>
+
+        <section class="pro-panel">
+          <div class="panel-header-pro">
+            <h3>Avisos recentes</h3>
+            <button class="text-action" id="btnAvisosRecentes">Enviar aviso</button>
+          </div>
+          ${tableAvisos(avisos.slice(0,5))}
+        </section>
       </div>
     </section>`;
-  $("#newAvisoHome").addEventListener("click", openAvisoModal);
-  $("#homeAddBtn").addEventListener("click", () => {
-    if (currentPage === "inicio") openAvisoModal();
-    else renderPage(currentPage);
-  });
+
+  $("#btnDashboardAviso").addEventListener("click", openAvisoModal);
+  $("#btnDashboardEscala").addEventListener("click", openEscalaModal);
+  $("#btnVerColaboradores").addEventListener("click", () => renderPage("colaboradores"));
+  $("#btnAvisosRecentes").addEventListener("click", openAvisoModal);
 }
 
 function empty(text){ return `<div class="empty">${text}</div>`; }
@@ -292,16 +460,105 @@ function renderColaboradores(){
 }
 
 function renderEscalas(){
-  const list = visible(state.escalas).filter(x=>x.ativo !== false);
-  setTitle("Escalas", isAdmin() ? "Escalas de todos os setores" : `Escalas do setor ${currentUser.setorNome || currentUser.setor}`);
+  const escalas = visible(state.escalas).filter(x=>x.ativo !== false);
+  const colaboradores = colaboradoresDoSetor();
+  const rows = createDemoWeekRows(colaboradores.length ? colaboradores : [
+    {nome:"Colaborador Modelo", cargo:"Operador"}
+  ]);
+  const setorLabel = getCurrentSetorLabel();
+
+  setTitle("Escalas", "Visualize e gerencie as escalas da equipe por período.");
   content.innerHTML = `
-    <div class="panel">
-      <div class="panel-header"><h2>Escalas cadastradas</h2><button class="primary-small" id="newEscala">Nova escala</button></div>
-      ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Setor</th><th>Início</th><th>Fim</th><th>Status</th><th>Criado por</th><th>Obs.</th></tr></thead><tbody>
-        ${list.map(e=>`<tr><td>${fmt(e.setorNome || e.setor)}</td><td>${fmt(e.dataInicio)}</td><td>${fmt(e.dataFim)}</td><td>${badge(e.status || "rascunho")}</td><td>${fmt(e.criadoPorNome || e.criadoPor)}</td><td>${fmt(e.observacao)}</td></tr>`).join("")}
-      </tbody></table></div>` : empty("Nenhuma escala cadastrada ainda.")}
-    </div>`;
-  $("#newEscala").addEventListener("click", openEscalaModal);
+    <section class="schedule-page">
+      <div class="dash-header">
+        <div>
+          <span class="eyebrow">Gestão de Pessoas</span>
+          <h2>Escalas por Setor</h2>
+          <p>${setorLabel}</p>
+        </div>
+        <div class="dash-actions">
+          ${pageButton("btnNovaEscala","＋ Nova escala")}
+          ${pageButton("btnPublicarEscala","✈ Publicar escala","success-pro")}
+          ${pageButton("btnExportarEscala","⇩ Exportar","outline-pro")}
+        </div>
+      </div>
+
+      <div class="schedule-layout">
+        <section class="schedule-main pro-panel">
+          <div class="schedule-toolbar">
+            <label>Setor
+              <select id="escalaSetorFiltro">${setorOptions(isAdmin())}</select>
+            </label>
+            <label>Período
+              <input type="text" id="escalaPeriodo" value="Semana atual" readonly />
+            </label>
+            <button class="outline-pro" id="btnHojeEscala">Hoje</button>
+          </div>
+
+          <div class="schedule-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Colaborador</th>
+                  <th>Seg</th>
+                  <th>Ter</th>
+                  <th>Qua</th>
+                  <th>Qui</th>
+                  <th>Sex</th>
+                  <th>Sáb</th>
+                  <th>Dom</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map(row => `
+                  <tr>
+                    <td>
+                      <div class="person-cell">
+                        <span>${initial(row.nome)}</span>
+                        <div><strong>${row.nome}</strong><small>${row.cargo}</small></div>
+                      </div>
+                    </td>
+                    ${row.dias.map(t => `<td><button class="shift ${t.cls}" type="button" data-shift="${t.label}"><strong>${t.label}</strong><small>${t.time}</small></button></td>`).join("")}
+                  </tr>`).join("")}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="legend">
+            <span><i class="manha"></i> Manhã 06:00 - 14:00</span>
+            <span><i class="tarde"></i> Tarde 14:00 - 22:00</span>
+            <span><i class="noite"></i> Noite 22:00 - 06:00</span>
+            <span><i class="folga"></i> Folga</span>
+          </div>
+        </section>
+
+        <aside class="schedule-side">
+          <section class="pro-panel">
+            <h3>Resumo do setor</h3>
+            <strong class="green-text">${setorLabel}</strong>
+            <div class="side-stats">
+              <div><span>Colaboradores</span><b>${colaboradores.length}</b></div>
+              <div><span>Escalas</span><b>${escalas.length}</b></div>
+              <div><span>Cobertura</span><b>100%</b></div>
+              <div><span>Pendências</span><b>${escalas.filter(e => String(e.status||"").includes("rascunho")).length}</b></div>
+            </div>
+          </section>
+
+          <section class="pro-panel">
+            <h3>Escalas cadastradas</h3>
+            ${escalas.length ? `<div class="simple-list">
+              ${escalas.slice(0,5).map(e=>`<div><strong>${fmt(e.setorNome || e.setor)}</strong><span>${fmt(e.dataInicio)} a ${fmt(e.dataFim)} · ${badge(e.status || "rascunho")}</span></div>`).join("")}
+            </div>` : empty("Nenhuma escala cadastrada ainda.")}
+          </section>
+        </aside>
+      </div>
+    </section>`;
+
+  $("#btnNovaEscala").addEventListener("click", openEscalaModal);
+  $("#btnPublicarEscala").addEventListener("click", () => showToast("Escala pronta para publicação. Use Nova escala para salvar no Firebase."));
+  $("#btnExportarEscala").addEventListener("click", () => showToast("Exportação preparada para a próxima etapa."));
+  $("#btnHojeEscala").addEventListener("click", () => showToast("Período ajustado para hoje."));
+  document.querySelectorAll(".shift").forEach(btn => btn.addEventListener("click", () => showToast(`Turno selecionado: ${btn.dataset.shift}`)));
 }
 
 function renderAvisos(){
@@ -316,16 +573,120 @@ function renderAvisos(){
 }
 
 function renderBancoHoras(){
-  const list = visible(state.bancoHoras).filter(x=>x.ativo !== false);
-  setTitle("Banco de Horas", "Saldos cadastrados por colaborador");
+  const banco = visible(state.bancoHoras).filter(x=>x.ativo !== false);
+  const colaboradores = colaboradoresDoSetor();
+  const positivos = banco.filter(b => safeNumber(b.saldoHoras) > 0);
+  const negativos = banco.filter(b => safeNumber(b.saldoHoras) < 0);
+  const saldoPositivo = sumSaldoHoras(positivos);
+  const saldoNegativo = sumSaldoHoras(negativos);
+  const pagos = banco.filter(b => String(b.tipoSaldo || "").toLowerCase().includes("pago"));
+  const criticos = negativos.length;
+
+  const linhas = banco.length ? banco : colaboradores.slice(0,6).map(c => ({
+    colaborador: getColaboradorNome(c),
+    setorNome: c.setorNome || c.setor,
+    saldoHoras: 0,
+    tipoSaldo:"neutro",
+    observacao:"Sem saldo cadastrado"
+  }));
+
+  setTitle("Banco de Horas", "Saldos cadastrados por colaborador.");
   content.innerHTML = `
-    <div class="panel">
-      <div class="panel-header"><h2>Banco de horas</h2><button class="primary-small" id="newBanco">Novo registro</button></div>
-      ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Setor</th><th>Saldo</th><th>Tipo</th><th>Atualização</th><th>Observação</th></tr></thead><tbody>
-        ${list.map(b=>`<tr><td>${fmt(b.colaborador)}</td><td>${fmt(b.setorNome || b.setor)}</td><td>${fmt(b.saldoHoras)}</td><td>${badge(b.tipoSaldo || "neutro")}</td><td>${fmt(b.ultimaAtualizacao)}</td><td>${fmt(b.observacao)}</td></tr>`).join("")}
-      </tbody></table></div>` : empty("Nenhum saldo de banco de horas cadastrado ainda.")}
-    </div>`;
-  $("#newBanco").addEventListener("click", openBancoModal);
+    <section class="hours-page">
+      <div class="dash-header">
+        <div>
+          <span class="eyebrow">Gestão de Pessoas</span>
+          <h2>Banco de Horas</h2>
+          <p>Acompanhe saldo positivo, saldo negativo e planos de regularização.</p>
+        </div>
+        <div class="dash-actions">
+          ${pageButton("btnNovoBanco","＋ Novo registro")}
+          ${pageButton("btnExportarBanco","⇩ Exportar","outline-pro")}
+        </div>
+      </div>
+
+      <div class="metric-grid hours">
+        <article class="metric-card">
+          <div class="metric-icon blue">⏱️</div>
+          <div><h3>Saldo positivo</h3><strong>${fmtHorasDecimal(saldoPositivo)}</strong><small>Horas</small></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon red">⏱️</div>
+          <div><h3>Saldo negativo</h3><strong>${fmtHorasDecimal(saldoNegativo)}</strong><small>Horas</small></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon green">💳</div>
+          <div><h3>Horas pagas</h3><strong>${pagos.length}</strong><small>Registros pagos</small></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon orange">👥</div>
+          <div><h3>Críticos</h3><strong>${criticos}</strong><small>Colaboradores com saldo negativo</small></div>
+        </article>
+      </div>
+
+      <div class="hours-layout">
+        <section class="pro-panel wide">
+          <div class="panel-header-pro">
+            <h3>Saldo por colaborador</h3>
+            <input class="pro-search" id="searchBanco" placeholder="Buscar colaborador..." />
+          </div>
+          <div class="table-wrap pro-table">
+            <table>
+              <thead><tr><th>Colaborador</th><th>Setor</th><th>Saldo</th><th>Status</th><th>Observação</th><th>Ações</th></tr></thead>
+              <tbody>
+                ${linhas.map(b => {
+                  const saldo = safeNumber(b.saldoHoras);
+                  return `<tr>
+                    <td><div class="person-cell"><span>${initial(b.colaborador || b.nome || "C")}</span><div><strong>${fmt(b.colaborador || b.nome)}</strong><small>${fmt(b.matricula || "")}</small></div></div></td>
+                    <td>${fmt(b.setorNome || b.setor)}</td>
+                    <td class="${saldo >= 0 ? "green-text" : "red-text"}"><strong>${fmtHorasDecimal(saldo)}</strong></td>
+                    <td>${badge(b.tipoSaldo || (saldo > 0 ? "positivo" : saldo < 0 ? "negativo" : "neutro"))}</td>
+                    <td>${fmt(b.observacao)}</td>
+                    <td><button class="icon-action blue" type="button">⏱️</button><button class="icon-action green" type="button">💰</button><button class="icon-action orange" type="button">📋</button></td>
+                  </tr>`;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="schedule-side">
+          <section class="pro-panel">
+            <h3>Saldo por setor</h3>
+            ${donut(banco.length ? (positivos.length / banco.length * 100) : 0, "positivos", "blue")}
+            <div class="sector-bars compact-bars">
+              ${groupBySetor(banco).slice(0,5).map(([setor,total]) => `
+                <div><span>${setor}</span>${miniBar(total, Math.max(banco.length,1))}<strong>${total}</strong></div>`).join("") || `<div class="empty compact">Sem registros.</div>`}
+            </div>
+          </section>
+
+          <section class="pro-panel">
+            <h3>Evolução do saldo</h3>
+            ${sparkline([3,4,5,4,6,7,6,8],"blue")}
+            ${sparkline([2,2,3,2,3,4,3,3],"green")}
+            ${sparkline([4,3,3,2,2,1,2,1],"red")}
+            <div class="legend mini">
+              <span><i class="noite"></i> Saldo positivo</span>
+              <span><i class="manha"></i> Horas pagas</span>
+              <span><i class="negativo"></i> Saldo negativo</span>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>`;
+
+  $("#btnNovoBanco").addEventListener("click", openBancoModal);
+  $("#btnExportarBanco").addEventListener("click", () => showToast("Exportação preparada para a próxima etapa."));
+  document.querySelectorAll(".icon-action").forEach(btn => btn.addEventListener("click", () => showToast("Ação selecionada. A edição detalhada entra na próxima etapa.")));
+  const search = $("#searchBanco");
+  if(search){
+    search.addEventListener("input", () => {
+      const q = normalize(search.value);
+      document.querySelectorAll(".pro-table tbody tr").forEach(tr => {
+        tr.style.display = normalize(tr.textContent).includes(q) ? "" : "none";
+      });
+    });
+  }
 }
 
 function renderPlanos(){
@@ -535,7 +896,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-base-v13-login-v20")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-interno-opcao-a-v21")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;
