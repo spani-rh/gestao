@@ -1039,3 +1039,123 @@ tr:last-child td{border-bottom:0}
     gap:6px;
   }
 }
+
+
+/* ===== v22 — Tema claro/escuro + editar/apagar ===== */
+.row-actions-v22{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.row-actions-v22 button{
+  width:34px;
+  height:34px;
+  border:1px solid rgba(148,163,184,.28);
+  border-radius:10px;
+  background:rgba(15,23,42,.35);
+  color:#fff;
+  font-weight:900;
+}
+.row-actions-v22 .edit-v22:hover{
+  border-color:#60a5fa;
+  background:rgba(37,99,235,.35);
+}
+.row-actions-v22 .delete-v22:hover{
+  border-color:#f87171;
+  background:rgba(239,68,68,.32);
+}
+#themeToggleBtn{
+  transition:transform .15s ease, background .15s ease;
+}
+#themeToggleBtn:hover{
+  transform:translateY(-1px);
+}
+
+body.light-theme{
+  background:#f6f7fb!important;
+  color:#111827!important;
+}
+body.light-theme .app,
+body.light-theme .main,
+body.light-theme .content{
+  background:#f6f7fb!important;
+  color:#111827!important;
+}
+body.light-theme .sidebar,
+body.light-theme .topbar,
+body.light-theme .panel,
+body.light-theme .card,
+body.light-theme .modal-card{
+  background:#ffffff!important;
+  color:#111827!important;
+  border-color:#e5e7eb!important;
+}
+body.light-theme .pro-dashboard,
+body.light-theme .schedule-page,
+body.light-theme .hours-page{
+  --pro-bg:#f6f7fb;
+  --pro-card:#ffffff;
+  --pro-card2:#ffffff;
+  --pro-line:#e5e7eb;
+  --pro-muted:#64748b;
+  --pro-text:#111827;
+  background:#f6f7fb!important;
+  color:#111827!important;
+}
+body.light-theme .metric-card,
+body.light-theme .pro-panel{
+  background:#ffffff!important;
+  border-color:#e5e7eb!important;
+  box-shadow:0 14px 34px rgba(15,23,42,.08)!important;
+}
+body.light-theme .metric-card h3,
+body.light-theme .metric-card strong,
+body.light-theme .pro-panel h3,
+body.light-theme .panel-header-pro h3,
+body.light-theme .person-cell strong{
+  color:#111827!important;
+}
+body.light-theme .metric-card small,
+body.light-theme .dash-header p,
+body.light-theme .simple-list span,
+body.light-theme .person-cell small{
+  color:#64748b!important;
+}
+body.light-theme .schedule-toolbar select,
+body.light-theme .schedule-toolbar input,
+body.light-theme .pro-search{
+  background:#ffffff!important;
+  color:#111827!important;
+  border-color:#d8e0eb!important;
+}
+body.light-theme .pro-dashboard th,
+body.light-theme .schedule-page th,
+body.light-theme .hours-page th{
+  background:#f8fafc!important;
+  color:#64748b!important;
+}
+body.light-theme .pro-dashboard td,
+body.light-theme .schedule-page td,
+body.light-theme .hours-page td{
+  color:#111827!important;
+  border-color:#e5e7eb!important;
+}
+body.light-theme .row-actions-v22 button{
+  background:#f8fafc!important;
+  color:#111827!important;
+  border-color:#d8e0eb!important;
+}
+body.light-theme .donut:after{
+  background:#ffffff!important;
+}
+body.light-theme .mini-progress{
+  background:#e5e7eb!important;
+}
+body.light-theme .side-stats div{
+  background:#f8fafc!important;
+  border-color:#e5e7eb!important;
+}
+body.light-theme .side-stats b,
+body.light-theme .simple-list strong{
+  color:#111827!important;
+}

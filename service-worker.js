@@ -1,10 +1,10 @@
-const CACHE_NAME = "spani-rh-interno-opcao-a-v21";
+const CACHE_NAME = "spani-rh-tema-crud-v22";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=21",
-  "./script.js?v=21",
-  "./manifest.json?v=21",
+  "./style.css?v=22",
+  "./script.js?v=22",
+  "./manifest.json?v=22",
   "./assets/spani-logo-oficial.png",
   "./assets/fachada-spani-login.png"
 ];

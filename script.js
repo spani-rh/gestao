@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "21.0.0";
+const APP_VERSION = "22.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -896,7 +896,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-interno-opcao-a-v21")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-tema-crud-v22")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;
@@ -921,3 +921,218 @@ document.addEventListener("click", (event) => {
     if ((!insideSidebar && !clickedMenu) || clickedNav) document.body.classList.remove("menu-open");
   }
 });
+
+
+/* ===== v22: tema claro/escuro e edição/exclusão de registros ===== */
+function applyThemeV22(theme){
+  document.body.classList.toggle("light-theme", theme === "light");
+  localStorage.setItem("spaniTheme", theme);
+  const btn = document.querySelector("#themeToggleBtn");
+  if(btn) btn.textContent = theme === "light" ? "☀️" : "☾";
+}
+function initThemeV22(){
+  applyThemeV22(localStorage.getItem("spaniTheme") || "dark");
+  document.querySelector("#themeToggleBtn")?.addEventListener("click", () => {
+    applyThemeV22(document.body.classList.contains("light-theme") ? "dark" : "light");
+  });
+}
+
+function collectionForPageV22(page){
+  return {
+    colaboradores:"colaboradores",
+    escalas:"escalas",
+    avisosRH:"avisosRH",
+    bancoHoras:"bancoHoras",
+    planosAcao:"planosAcao",
+    eventos:"eventos",
+    ferias:"ferias"
+  }[page] || null;
+}
+function listForPageV22(page){
+  const col = collectionForPageV22(page);
+  if(!col) return [];
+  if(page === "avisosRH"){
+    return isAdmin() ? state.avisosRH.filter(x=>x.ativo!==false) : state.avisosRH.filter(x=>x.ativo!==false && (x.enviadoPor === currentUser.usuario || x.setor === currentUser.setor));
+  }
+  return visible(state[col]).filter(x=>x.ativo!==false);
+}
+function escV22(v){
+  return String(v ?? "").replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+function actionsV22(page, id){
+  return `<div class="row-actions-v22">
+    <button type="button" class="edit-v22" data-page="${page}" data-id="${id}" title="Editar">✏️</button>
+    <button type="button" class="delete-v22" data-page="${page}" data-id="${id}" title="Apagar">🗑️</button>
+  </div>`;
+}
+function enhanceCrudV22(){
+  const col = collectionForPageV22(currentPage);
+  if(!col) return;
+  const list = listForPageV22(currentPage);
+
+  // Tabelas da página atual
+  document.querySelectorAll(".content table").forEach(table => {
+    if(table.dataset.crudV22 === "1") return;
+    const rows = [...table.querySelectorAll("tbody tr")];
+    if(!rows.length || !list.length) return;
+    const head = table.querySelector("thead tr");
+    if(head && !head.querySelector(".crud-head-v22")){
+      head.insertAdjacentHTML("beforeend", `<th class="crud-head-v22">Ações</th>`);
+    }
+    rows.forEach((tr, i) => {
+      const item = list[i];
+      if(!item?.id || tr.querySelector(".row-actions-v22")) return;
+      tr.insertAdjacentHTML("beforeend", `<td>${actionsV22(currentPage, item.id)}</td>`);
+    });
+    table.dataset.crudV22 = "1";
+  });
+
+  // Lista lateral das escalas
+  if(currentPage === "escalas"){
+    document.querySelectorAll(".simple-list > div").forEach((div, i) => {
+      const item = list[i];
+      if(item?.id && !div.querySelector(".row-actions-v22")){
+        div.insertAdjacentHTML("beforeend", actionsV22("escalas", item.id));
+      }
+    });
+  }
+
+  document.querySelectorAll(".edit-v22").forEach(btn => btn.onclick = () => openEditV22(btn.dataset.page, btn.dataset.id));
+  document.querySelectorAll(".delete-v22").forEach(btn => btn.onclick = () => deleteItemV22(btn.dataset.page, btn.dataset.id));
+}
+function itemV22(page, id){
+  const col = collectionForPageV22(page);
+  return (state[col] || []).find(x => x.id === id);
+}
+async function saveEditV22(page, id, payload){
+  const col = collectionForPageV22(page);
+  await updateDoc(doc(db, col, id), {...payload, atualizadoEm: serverTimestamp()});
+  closeModal();
+  await loadCollection(col);
+  renderPage(page);
+  showToast("Registro atualizado.");
+}
+async function deleteItemV22(page, id){
+  const col = collectionForPageV22(page);
+  const item = itemV22(page, id);
+  if(!col || !item) return showToast("Registro não encontrado.");
+  const label = item.nome || item.titulo || item.colaborador || item.setorNome || "este registro";
+  if(!confirm(`Apagar ${label}?`)) return;
+  try{
+    // Apaga visualmente sem destruir histórico: todos os relatórios já filtram ativo !== false.
+    await updateDoc(doc(db, col, id), {ativo:false, apagadoEm:serverTimestamp(), apagadoPor:currentUser?.usuario || ""});
+    await loadCollection(col);
+    renderPage(page);
+    showToast("Registro apagado.");
+  }catch(err){
+    console.error(err);
+    showToast("Erro ao apagar no Firebase.");
+  }
+}
+function openEditV22(page, id){
+  const item = itemV22(page, id);
+  if(!item) return showToast("Registro não encontrado.");
+
+  if(page === "colaboradores"){
+    openModal("Editar colaborador", `<form id="editV22" class="form-grid">
+      <div class="full"><label>Nome</label><input id="eNome" value="${escV22(item.nome)}" required></div>
+      <div><label>Setor</label><select id="eSetor">${setorOptions()}</select></div>
+      <div><label>Data de nascimento</label><input id="eNasc" type="date" value="${escV22(item.dataNascimento)}"></div>
+      <button class="full" type="submit">Salvar alterações</button>
+    </form>`);
+    $("#eSetor").value = item.setor || $("#eSetor").value;
+    $("#editV22").onsubmit = e => {e.preventDefault(); const s=selectedSetor($("#eSetor")); saveEditV22(page,id,{nome:$("#eNome").value.trim(),setor:s.setor,setorNome:s.setorNome,dataNascimento:$("#eNasc").value});};
+    return;
+  }
+
+  if(page === "escalas"){
+    openModal("Editar escala", `<form id="editV22" class="form-grid">
+      <div><label>Setor</label><select id="eSetor">${setorOptions(isAdmin())}</select></div>
+      <div><label>Status</label><select id="eStatus"><option value="rascunho">Rascunho</option><option value="publicada">Publicada</option></select></div>
+      <div><label>Início</label><input id="eInicio" type="date" value="${escV22(item.dataInicio)}" required></div>
+      <div><label>Fim</label><input id="eFim" type="date" value="${escV22(item.dataFim)}" required></div>
+      <div class="full"><label>Observação</label><textarea id="eObs" rows="3">${escV22(item.observacao)}</textarea></div>
+      <button class="full" type="submit">Salvar alterações</button>
+    </form>`);
+    $("#eSetor").value = item.setor || $("#eSetor").value; $("#eStatus").value = item.status || "rascunho";
+    $("#editV22").onsubmit = e => {e.preventDefault(); const s=selectedSetor($("#eSetor")); saveEditV22(page,id,{setor:s.setor,setorNome:s.setorNome,status:$("#eStatus").value,dataInicio:$("#eInicio").value,dataFim:$("#eFim").value,observacao:$("#eObs").value.trim()});};
+    return;
+  }
+
+  if(page === "avisosRH"){
+    openModal("Editar aviso", `<form id="editV22" class="form-grid">
+      <div><label>Tipo</label><select id="eTipo"><option value="atestado">Atestado</option><option value="banco_horas">Banco de Horas</option><option value="faltas">Faltas</option></select></div>
+      <div><label>Status</label><select id="eStatus"><option value="pendente">Pendente</option><option value="resolvido">Resolvido</option></select></div>
+      <div class="full"><label>Colaborador</label><input id="eColab" value="${escV22(item.colaborador)}" required></div>
+      <div class="full"><label>Mensagem</label><textarea id="eMsg" rows="4">${escV22(item.mensagem)}</textarea></div>
+      <button class="full" type="submit">Salvar alterações</button>
+    </form>`);
+    $("#eTipo").value = item.tipo || "atestado"; $("#eStatus").value = item.status || "pendente";
+    $("#editV22").onsubmit = e => {e.preventDefault(); const tipo=$("#eTipo").value; saveEditV22(page,id,{tipo,status:$("#eStatus").value,colaborador:$("#eColab").value.trim(),mensagem:$("#eMsg").value.trim(),titulo:tipo==="atestado"?"Atestado":tipo==="banco_horas"?"Banco de Horas":"Faltas"});};
+    return;
+  }
+
+  if(page === "bancoHoras"){
+    openModal("Editar banco de horas", `<form id="editV22" class="form-grid">
+      <div class="full"><label>Colaborador</label><input id="eColab" value="${escV22(item.colaborador)}" required></div>
+      <div><label>Setor</label><select id="eSetor">${setorOptions()}</select></div>
+      <div><label>Saldo de horas</label><input id="eSaldo" type="number" step="0.01" value="${escV22(item.saldoHoras || 0)}"></div>
+      <div><label>Tipo</label><select id="eTipo"><option value="neutro">Neutro</option><option value="positivo">Positivo</option><option value="negativo">Negativo</option><option value="pago">Pago</option></select></div>
+      <div class="full"><label>Observação</label><textarea id="eObs" rows="3">${escV22(item.observacao)}</textarea></div>
+      <button class="full" type="submit">Salvar alterações</button>
+    </form>`);
+    $("#eSetor").value = item.setor || $("#eSetor").value; $("#eTipo").value = item.tipoSaldo || "neutro";
+    $("#editV22").onsubmit = e => {e.preventDefault(); const s=selectedSetor($("#eSetor")); saveEditV22(page,id,{colaborador:$("#eColab").value.trim(),setor:s.setor,setorNome:s.setorNome,saldoHoras:Number($("#eSaldo").value||0),tipoSaldo:$("#eTipo").value,observacao:$("#eObs").value.trim(),ultimaAtualizacao:today()});};
+    return;
+  }
+
+  if(page === "planosAcao"){
+    openModal("Editar plano", `<form id="editV22" class="form-grid">
+      <div class="full"><label>Título</label><input id="eTitulo" value="${escV22(item.titulo)}" required></div>
+      <div><label>Status</label><select id="eStatus"><option value="planejado">Planejado</option><option value="em_andamento">Em andamento</option><option value="concluido">Concluído</option><option value="atrasado">Atrasado</option></select></div>
+      <div><label>Prazo</label><input id="ePrazo" type="date" value="${escV22(item.prazo)}"></div>
+      <div><label>Progresso %</label><input id="eProg" type="number" min="0" max="100" value="${escV22(item.progresso || 0)}"></div>
+      <div class="full"><label>Descrição</label><textarea id="eDesc" rows="4">${escV22(item.descricao)}</textarea></div>
+      <button class="full" type="submit">Salvar alterações</button>
+    </form>`);
+    $("#eStatus").value = item.status || "planejado";
+    $("#editV22").onsubmit = e => {e.preventDefault(); saveEditV22(page,id,{titulo:$("#eTitulo").value.trim(),status:$("#eStatus").value,prazo:$("#ePrazo").value,progresso:Number($("#eProg").value||0),descricao:$("#eDesc").value.trim()});};
+    return;
+  }
+
+  if(page === "eventos"){
+    openModal("Editar evento", `<form id="editV22" class="form-grid">
+      <div class="full"><label>Título</label><input id="eTitulo" value="${escV22(item.titulo)}" required></div>
+      <div><label>Data</label><input id="eData" type="date" value="${escV22(item.dataEvento)}" required></div>
+      <div><label>Hora</label><input id="eHora" type="time" value="${escV22(item.hora)}"></div>
+      <div><label>Tipo</label><input id="eTipo" value="${escV22(item.tipo)}"></div>
+      <div class="full"><label>Descrição</label><textarea id="eDesc" rows="3">${escV22(item.descricao)}</textarea></div>
+      <button class="full" type="submit">Salvar alterações</button>
+    </form>`);
+    $("#editV22").onsubmit = e => {e.preventDefault(); saveEditV22(page,id,{titulo:$("#eTitulo").value.trim(),dataEvento:$("#eData").value,hora:$("#eHora").value,tipo:$("#eTipo").value.trim(),descricao:$("#eDesc").value.trim()});};
+    return;
+  }
+
+  if(page === "ferias"){
+    openModal("Editar férias", `<form id="editV22" class="form-grid">
+      <div class="full"><label>Colaborador</label><input id="eColab" value="${escV22(item.colaborador)}" required></div>
+      <div><label>Início</label><input id="eInicio" type="date" value="${escV22(item.dataInicio)}" required></div>
+      <div><label>Fim</label><input id="eFim" type="date" value="${escV22(item.dataFim)}" required></div>
+      <div><label>Dias</label><input id="eDias" type="number" min="1" value="${escV22(item.dias || 15)}"></div>
+      <div><label>Status</label><select id="eStatus"><option value="programada">Programada</option><option value="em_andamento">Em andamento</option><option value="concluida">Concluída</option></select></div>
+      <button class="full" type="submit">Salvar alterações</button>
+    </form>`);
+    $("#eStatus").value = item.status || "programada";
+    $("#editV22").onsubmit = e => {e.preventDefault(); saveEditV22(page,id,{colaborador:$("#eColab").value.trim(),dataInicio:$("#eInicio").value,dataFim:$("#eFim").value,dias:Number($("#eDias").value||0),status:$("#eStatus").value});};
+    return;
+  }
+}
+
+const renderPageOriginalV22 = renderPage;
+renderPage = function(page){
+  renderPageOriginalV22(page);
+  setTimeout(enhanceCrudV22, 0);
+};
+
+initThemeV22();
+setTimeout(enhanceCrudV22, 0);
