@@ -1707,3 +1707,68 @@ body.light-theme .inicio-nav-svg,
 html.sp-theme-light .inicio-nav-svg{
   stroke:currentColor!important;
 }
+
+
+/* ===== v28 — proteger textos do card de login ===== */
+#loginScreen .login-card h2,
+#loginScreen .login-card-dark h2,
+#loginScreen .login-card-title h2,
+body.light-theme #loginScreen .login-card h2,
+body.light-theme #loginScreen .login-card-dark h2,
+body.light-theme #loginScreen .login-card-title h2,
+body.dark-theme #loginScreen .login-card h2,
+body.dark-theme #loginScreen .login-card-dark h2,
+body.dark-theme #loginScreen .login-card-title h2,
+html.sp-theme-light #loginScreen .login-card h2,
+html.sp-theme-light #loginScreen .login-card-dark h2,
+html.sp-theme-light #loginScreen .login-card-title h2,
+html.sp-theme-dark #loginScreen .login-card h2,
+html.sp-theme-dark #loginScreen .login-card-dark h2,
+html.sp-theme-dark #loginScreen .login-card-title h2{
+  color:#ffffff!important;
+  opacity:1!important;
+  visibility:visible!important;
+  text-shadow:0 8px 24px rgba(0,0,0,.32)!important;
+}
+
+#loginScreen .login-card label,
+#loginScreen .login-card-dark label,
+body.light-theme #loginScreen .login-card label,
+body.light-theme #loginScreen .login-card-dark label,
+body.dark-theme #loginScreen .login-card label,
+body.dark-theme #loginScreen .login-card-dark label,
+html.sp-theme-light #loginScreen .login-card label,
+html.sp-theme-light #loginScreen .login-card-dark label,
+html.sp-theme-dark #loginScreen .login-card label,
+html.sp-theme-dark #loginScreen .login-card-dark label{
+  color:#f4f8ff!important;
+  opacity:1!important;
+}
+
+#loginScreen .login-card-title span,
+#loginScreen .login-card-dark .login-card-title span,
+body.light-theme #loginScreen .login-card-title span,
+body.dark-theme #loginScreen .login-card-title span,
+html.sp-theme-light #loginScreen .login-card-title span,
+html.sp-theme-dark #loginScreen .login-card-title span{
+  background:rgba(37,99,235,.18)!important;
+  color:#7ab5ff!important;
+  border-color:rgba(122,181,255,.30)!important;
+}
+
+#loginScreen .field input,
+#loginScreen .login-card-dark .field input,
+body.light-theme #loginScreen .field input,
+body.dark-theme #loginScreen .field input,
+html.sp-theme-light #loginScreen .field input,
+html.sp-theme-dark #loginScreen .field input{
+  color:#ffffff!important;
+}
+
+#loginScreen .remember,
+body.light-theme #loginScreen .remember,
+body.dark-theme #loginScreen .remember,
+html.sp-theme-light #loginScreen .remember,
+html.sp-theme-dark #loginScreen .remember{
+  color:#dce8f7!important;
+}

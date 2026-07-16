@@ -1,23 +1,10 @@
 Spani Atacadista - Gestão RH
-Versão v27 - Correção pontual da entrada e ícones de Início
+Versão v28 - Correção do texto do login
 
-Base:
-- Voltou a partir da v25, que estava validada.
-
-Correções:
-1. A tela de entrada foi protegida para manter:
-   - "Gestão RH" em laranja;
-   - subtítulo em branco;
-   - logo visível.
-2. Ícone lateral de "Início" trocado por SVG corporativo de dashboard/grid.
-3. Ícone superior ao lado de "Início" trocado por SVG inline.
-4. Não depende de fonte externa nem imagem.
-
-Preservado:
-- Login da Jessica.
-- Tema Dark/White da v25.
-- Dashboard/Início, Escalas, Banco de Horas.
-- Editar/apagar.
+Correção:
+- "Acesse sua conta" voltou a ficar branco e visível no card de login.
+- Protegidos também os labels do login contra o CSS global do tema.
+- Não alterei layout, login, tema, dashboard, ícones ou módulos internos.
 
 Abrir:
-https://spani-rh.github.io/gestao/?v=27
+https://spani-rh.github.io/gestao/?v=28
