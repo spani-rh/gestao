@@ -1772,3 +1772,34 @@ html.sp-theme-light #loginScreen .remember,
 html.sp-theme-dark #loginScreen .remember{
   color:#dce8f7!important;
 }
+
+
+/* ===== v29 — ícones modernos do menu RH ===== */
+.menu-fa-icon{
+  width:22px!important;
+  min-width:22px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:1.1rem!important;
+  line-height:1!important;
+  margin-right:14px!important;
+  color:currentColor!important;
+  opacity:.98!important;
+  vertical-align:middle!important;
+}
+.menu-item, .nav-item, .sidebar-item{
+  display:flex!important;
+  align-items:center!important;
+}
+.menu-item span, .nav-item span, .sidebar-item span{
+  display:inline-flex!important;
+  align-items:center!important;
+}
+body.light-theme .menu-fa-icon,
+body.dark-theme .menu-fa-icon,
+html.sp-theme-light .menu-fa-icon,
+html.sp-theme-dark .menu-fa-icon{
+  color:currentColor!important;
+  opacity:.98!important;
+}

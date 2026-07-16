@@ -1,10 +1,18 @@
 Spani Atacadista - Gestão RH
-Versão v28 - Correção do texto do login
+Versão v29 - Ícones do menu RH corrigidos
 
-Correção:
-- "Acesse sua conta" voltou a ficar branco e visível no card de login.
-- Protegidos também os labels do login contra o CSS global do tema.
-- Não alterei layout, login, tema, dashboard, ícones ou módulos internos.
+Corrigido:
+- Recolocados os ícones do menu lateral.
+- Ícones modernos e coerentes com Gestão de RH:
+  Início, Colaboradores, Escalas, Avisos RH, Banco de Horas,
+  Planos de Ação, Eventos e Férias.
+- Ajustado o ícone estranho do título "Início".
 
-Abrir:
-https://spani-rh.github.io/gestao/?v=28
+Preservado:
+- Tela de entrada
+- Correções do login
+- Texto "Acesse sua conta"
+- Restante do layout e páginas já validadas
+
+Abrir após publicar:
+https://spani-rh.github.io/gestao/?v=29
