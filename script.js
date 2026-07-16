@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "24.0.0";
+const APP_VERSION = "25.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -33,7 +33,7 @@ let state = {
 const collections = ["usuarios","setores","colaboradores","escalas","avisosRH","bancoHoras","planosAcao","eventos","ferias","faltas","atestados"];
 
 const navItems = [
-  ["inicio","⌂","Dashboard"],
+  ["inicio","⌂","Início"],
   ["colaboradores","👥","Colaboradores"],
   ["escalas","📅","Escalas"],
   ["avisosRH","🔔","Avisos RH"],
@@ -300,7 +300,7 @@ function renderInicio(){
   const planosConcluidos = planos.filter(p => String(p.status || "").toLowerCase().includes("concl")).length;
   const planosPercent = planos.length ? (planosConcluidos / planos.length * 100) : 0;
 
-  setTitle("Dashboard", "Visão geral da Gestão de Pessoas");
+  setTitle("Início", "Visão geral da Gestão de Pessoas");
   content.innerHTML = `
     <section class="pro-dashboard">
       <div class="dash-header">
@@ -896,7 +896,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-tema-direto-v24")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-inicio-tema-v25")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;
@@ -1157,7 +1157,6 @@ renderPage = function(page){
   setTimeout(enhanceCrudV22, 0);
 };
 
-initThemeV22();
+
 setTimeout(enhanceCrudV22, 0);
 
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initThemeV22); else initThemeV22();

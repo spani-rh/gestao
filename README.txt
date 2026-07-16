@@ -1,12 +1,12 @@
 Spani Atacadista - Gestão RH
-Versão v24 - Dark/White direto
+Versão v25 - Início + Tema sem conflito
 
-Correção:
-- O botão Dark/White agora tem onclick direto no HTML.
-- Não depende do script principal, Firebase ou login.
-- Alterna data-theme no HTML/body.
-- Muda ícone entre 🌙 e ☀️.
-- Salva preferência no navegador.
+Correções:
+- "Dashboard" alterado para "Início".
+- Corrigido conflito do botão Dark/White.
+- Scripts antigos de tema foram desativados.
+- Novo script do tema roda por último e bloqueia dupla execução.
+- Botão muda entre 🌙 e ☀️ e aplica tema claro/escuro.
 
 Abrir:
-https://spani-rh.github.io/gestao/?v=24
+https://spani-rh.github.io/gestao/?v=25
