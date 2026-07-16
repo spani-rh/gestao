@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "25.0.0";
+const APP_VERSION = "27.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -32,8 +32,18 @@ let state = {
 
 const collections = ["usuarios","setores","colaboradores","escalas","avisosRH","bancoHoras","planosAcao","eventos","ferias","faltas","atestados"];
 
+
+const ICON_INICIO_SPANI = `
+  <svg class="inicio-nav-svg" viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="4" y="4" width="7" height="7" rx="2"></rect>
+    <rect x="13" y="4" width="7" height="7" rx="2"></rect>
+    <rect x="4" y="13" width="7" height="7" rx="2"></rect>
+    <rect x="13" y="13" width="7" height="7" rx="2"></rect>
+  </svg>
+`;
+
 const navItems = [
-  ["inicio","⌂","Início"],
+  ["inicio", ICON_INICIO_SPANI, "Início"],
   ["colaboradores","👥","Colaboradores"],
   ["escalas","📅","Escalas"],
   ["avisosRH","🔔","Avisos RH"],
@@ -161,7 +171,7 @@ $("#quickAvisoBtn").addEventListener("click", ()=> openAvisoModal());
 
 function buildNav(){
   $("#sideNav").innerHTML = navItems.map(([key,icon,label]) =>
-    `<button class="nav-button" data-page="${key}"><b>${icon}</b><span>${label}</span></button>`
+    `<button class="nav-button" data-page="${key}"><b class="nav-icon-box">${icon}</b><span>${label}</span></button>`
   ).join("");
   document.querySelectorAll(".nav-button").forEach(btn => btn.addEventListener("click",()=>renderPage(btn.dataset.page)));
 }
@@ -896,7 +906,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-inicio-tema-v25")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-fix-entrada-icones-v27")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;
