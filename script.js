@@ -5,7 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const APP_VERSION = "29.0.0";
+const APP_VERSION = "30.0.0";
 const firebaseConfig = {
   apiKey: "AIzaSyC9B_LUlxeOC-WRl9uo43pFgGnQ-OmUVn8",
   authDomain: "spani-gestaorh.firebaseapp.com",
@@ -33,24 +33,71 @@ let state = {
 const collections = ["usuarios","setores","colaboradores","escalas","avisosRH","bancoHoras","planosAcao","eventos","ferias","faltas","atestados"];
 
 
-const ICON_INICIO_SPANI = `
-  <svg class="inicio-nav-svg" viewBox="0 0 24 24" aria-hidden="true">
-    <rect x="4" y="4" width="7" height="7" rx="2"></rect>
-    <rect x="13" y="4" width="7" height="7" rx="2"></rect>
-    <rect x="4" y="13" width="7" height="7" rx="2"></rect>
-    <rect x="13" y="13" width="7" height="7" rx="2"></rect>
-  </svg>
-`;
+
+const MENU_ICONS_RH = {
+  inicio: `
+    <svg class="side-rh-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="4" y="4" width="7" height="7" rx="2"></rect>
+      <rect x="13" y="4" width="7" height="7" rx="2"></rect>
+      <rect x="4" y="13" width="7" height="7" rx="2"></rect>
+      <rect x="13" y="13" width="7" height="7" rx="2"></rect>
+    </svg>`,
+  colaboradores: `
+    <svg class="side-rh-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9.5" cy="7" r="4"></circle>
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </svg>`,
+  escalas: `
+    <svg class="side-rh-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="17" rx="3"></rect>
+      <path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 10h18"></path>
+      <path d="m9 16 2 2 4-5"></path>
+    </svg>`,
+  avisosRH: `
+    <svg class="side-rh-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+    </svg>`,
+  bancoHoras: `
+    <svg class="side-rh-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 7v5l3 2"></path>
+    </svg>`,
+  planosAcao: `
+    <svg class="side-rh-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 5h6"></path>
+      <path d="M9 3h6a2 2 0 0 1 2 2v1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h1V5a2 2 0 0 1 2-2Z"></path>
+      <path d="m8 13 2 2 5-5"></path>
+      <path d="M8 18h8"></path>
+    </svg>`,
+  eventos: `
+    <svg class="side-rh-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="17" rx="3"></rect>
+      <path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M3 10h18"></path>
+      <path d="M12 14.2l.7 1.5 1.6.2-1.2 1.1.3 1.6-1.4-.8-1.4.8.3-1.6-1.2-1.1 1.6-.2.7-1.5Z"></path>
+    </svg>`,
+  ferias: `
+    <svg class="side-rh-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3 20h18"></path>
+      <path d="M7 20c1.2-4.8 3.7-8.4 7.5-10.7"></path>
+      <path d="M5 9c4-4 9.5-4.5 14-1.5"></path>
+      <path d="M5 9c2.8-.8 5.2.2 7 3"></path>
+      <path d="M12 12c.7-3 2.8-4.5 7-4.5"></path>
+    </svg>`
+};
+function menuIconRH(key){ return MENU_ICONS_RH[key] || ""; }
 
 const navItems = [
-  ["inicio", ICON_INICIO_SPANI, "Início"],
-  ["colaboradores","👥","Colaboradores"],
-  ["escalas","📅","Escalas"],
-  ["avisosRH","🔔","Avisos RH"],
-  ["bancoHoras","⏱️","Banco de Horas"],
-  ["planosAcao","✅","Planos de Ação"],
-  ["eventos","🎉","Eventos"],
-  ["ferias","🌴","Férias"]
+  ["inicio", menuIconRH("inicio"), "Início"],
+  ["colaboradores", menuIconRH("colaboradores"), "Colaboradores"],
+  ["escalas", menuIconRH("escalas"), "Escalas"],
+  ["avisosRH", menuIconRH("avisosRH"), "Avisos RH"],
+  ["bancoHoras", menuIconRH("bancoHoras"), "Banco de Horas"],
+  ["planosAcao", menuIconRH("planosAcao"), "Planos de Ação"],
+  ["eventos", menuIconRH("eventos"), "Eventos"],
+  ["ferias", menuIconRH("ferias"), "Férias"]
 ];
 
 function showToast(msg){
@@ -171,7 +218,7 @@ $("#quickAvisoBtn").addEventListener("click", ()=> openAvisoModal());
 
 function buildNav(){
   $("#sideNav").innerHTML = navItems.map(([key,icon,label]) =>
-    `<button class="nav-button" data-page="${key}"><b class="nav-icon-box">${icon}</b><span>${label}</span></button>`
+    `<button class="nav-button" data-page="${key}"><b class="side-rh-icon-box">${icon}</b><span>${label}</span></button>`
   ).join("");
   document.querySelectorAll(".nav-button").forEach(btn => btn.addEventListener("click",()=>renderPage(btn.dataset.page)));
 }
@@ -906,7 +953,7 @@ function openFeriasModal(){
 async function clearOldCaches(){
   if(!("caches" in window)) return;
   const keys = await caches.keys();
-  await Promise.all(keys.filter(k => !k.includes("spani-rh-icones-menu-rh-v29")).map(k => caches.delete(k)));
+  await Promise.all(keys.filter(k => !k.includes("spani-rh-icones-laterais-v30")).map(k => caches.delete(k)));
 }
 async function registerSW(){
   if(!("serviceWorker" in navigator)) return;

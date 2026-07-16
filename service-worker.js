@@ -1,10 +1,10 @@
-const CACHE_NAME = "spani-rh-icones-menu-rh-v29";
+const CACHE_NAME = "spani-rh-icones-laterais-v30";
 const ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=29",
-  "./script.js?v=29",
-  "./manifest.json?v=29",
+  "./style.css?v=30",
+  "./script.js?v=30",
+  "./manifest.json?v=30",
   "./assets/spani-logo-oficial.png",
   "./assets/fachada-spani-login.png"
 ];

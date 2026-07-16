@@ -1803,3 +1803,48 @@ html.sp-theme-dark .menu-fa-icon{
   color:currentColor!important;
   opacity:.98!important;
 }
+
+
+/* ===== v30 — ÍCONES LATERAIS RH: somente menu lateral ===== */
+.nav-button{
+  display:flex!important;
+  align-items:center!important;
+}
+.side-rh-icon-box{
+  width:30px!important;
+  min-width:30px!important;
+  height:30px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin-right:14px!important;
+  color:currentColor!important;
+  line-height:1!important;
+  font-size:0!important;
+}
+.side-rh-icon{
+  width:23px!important;
+  height:23px!important;
+  display:block!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.05!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  opacity:.96!important;
+  visibility:visible!important;
+}
+.nav-button.active .side-rh-icon{
+  stroke:#ffffff!important;
+  opacity:1!important;
+}
+body.light-theme .side-rh-icon,
+body.dark-theme .side-rh-icon,
+html.sp-theme-light .side-rh-icon,
+html.sp-theme-dark .side-rh-icon{
+  stroke:currentColor!important;
+}
+.nav-button b.side-rh-icon-box svg{
+  visibility:visible!important;
+  opacity:1!important;
+}
